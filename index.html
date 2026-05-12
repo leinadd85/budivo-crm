@@ -302,6 +302,7 @@ textarea{height:64px;resize:none}
         <div class="form-row"><label>EXY 08 — netto (zł)</label><input type="number" id="o-p08" value="9500" placeholder="9500"></div>
         <div class="form-row"><label>EXY 09 — netto (zł)</label><input type="number" id="o-p09" value="11500" placeholder="11500"></div>
       </div>
+      <div class="form-row"><label>EXY 09+ — netto (zł, opcjonalnie)</label><input type="number" id="o-p09plus" placeholder="wpisz lub zostaw puste = Cena na zapytanie"></div>
       <div class="form-row"><label>Data oferty</label><input type="date" id="o-date"></div>
       <button class="btn-primary" id="gen-btn" onclick="generateOffer()">📄 Generuj ofertę PDF</button>
       <button class="btn-secondary" onclick="closeSheet('sheet-offer-gen')">Anuluj</button>
@@ -593,6 +594,7 @@ async function generateOffer(){
   const area=area1;
   const thick=thick1;
   const p08=parseInt(document.getElementById('o-p08').value)||9500;
+  const p09plus=parseInt(document.getElementById('o-p09plus').value)||0;
   const p09=parseInt(document.getElementById('o-p09').value)||11500;
   const p08b=Math.round(p08*1.08);
   const p09b=Math.round(p09*1.08);
@@ -610,7 +612,7 @@ async function generateOffer(){
     const vd=new Date(dt);vd.setDate(vd.getDate()+14);
     validUntil=vd.toLocaleDateString('pl-PL',{day:'2-digit',month:'2-digit',year:'numeric'});
   }
-  const fmt=n=>n.toLocaleString('pl-PL');
+  const fmt=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,' ');
 
   // Pokaż progress
   document.getElementById('offer-form').style.display='none';
@@ -727,7 +729,7 @@ async function generateOffer(){
       });
       // Laczna powierzchnia
       const totalVol=scopes.reduce((a,s)=>a+(s.area*s.thick/100),0).toFixed(2);
-      drawText(p3,'Laczna pow: '+totalArea+'m2  Laczna obj: '+totalVol+'m3',49,ty+2,8,fontB,WHITE);
+      drawText(p3,'Razem: '+totalArea+'m2 / obj: '+totalVol+'m3',49,ty+2,8,fontB,WHITE);
     }
 
     setStatus('Wypełniam ceny wariantów...');
@@ -742,7 +744,14 @@ async function generateOffer(){
     drawRect(p4,212,426,173,52,3,WHITE);
     drawText(p4,`${fmt(p09)} zl`,225.7,444,18,fontB,BLACK);
     drawText(p4,`ok. ${fmt(p09b)} zl brutto (+ 8% VAT)`,225.7,459,8,fontR,GRAY);
-    // Ważność w tabeli
+    // EXY09+ cena (wariant premium)
+    if(p09plus>0){
+      const p09plusb=Math.round(p09plus*1.08);
+      drawRect(p4,390,335,163,52,3,WHITE);
+      drawText(p4,fmt(p09plus)+' zl',403.5,354,14,fontB,BLACK);
+      drawText(p4,'ok. '+fmt(p09plusb)+' zl brutto (+ 8% VAT)',403.5,368,7,fontR,GRAY);
+    }
+    // Waznosc w tabeli
     drawRect(p4,309,677,205,19,2,WHITE);
     drawText(p4,`14 dni (do ${validUntil})`,313.5,687,9,fontB,BLACK);
     // Alert
