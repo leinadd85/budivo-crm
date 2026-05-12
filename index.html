@@ -271,10 +271,29 @@ textarea{height:64px;resize:none}
       <div style="border-top:1px solid var(--border);margin:10px 0;padding-top:10px">
         <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px">Zakres prac</div>
       </div>
-      <div class="form-row"><label>Opis zakresu</label><input type="text" id="o-scope" value="Ocieplenie połaci dachowej do stropu + strop"></div>
-      <div class="form-2">
-        <div class="form-row"><label>Powierzchnia (m²)</label><input type="number" id="o-area" value="100" placeholder="100"></div>
-        <div class="form-row"><label>Grubość (cm)</label><input type="number" id="o-thick" value="25" placeholder="25"></div>
+      <div style="background:var(--bg);border-radius:var(--radius-sm);padding:10px;margin-bottom:10px">
+        <div style="font-size:11px;font-weight:600;color:var(--or-d);margin-bottom:8px">Zakres 1 *</div>
+        <div class="form-row"><label>Opis</label><input type="text" id="o-scope1" value="Ocieplenie połaci dachowej" placeholder="np. Ocieplenie poddasza"></div>
+        <div class="form-2">
+          <div class="form-row"><label>Powierzchnia (m²)</label><input type="number" id="o-area1" value="100" placeholder="100"></div>
+          <div class="form-row"><label>Grubość (cm)</label><input type="number" id="o-thick1" value="25" placeholder="25"></div>
+        </div>
+      </div>
+      <div style="background:var(--bg);border-radius:var(--radius-sm);padding:10px;margin-bottom:10px">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px">Zakres 2 (opcjonalnie)</div>
+        <div class="form-row"><label>Opis</label><input type="text" id="o-scope2" placeholder="np. Ocieplenie stropu"></div>
+        <div class="form-2">
+          <div class="form-row"><label>Powierzchnia (m²)</label><input type="number" id="o-area2" placeholder="—"></div>
+          <div class="form-row"><label>Grubość (cm)</label><input type="number" id="o-thick2" placeholder="—"></div>
+        </div>
+      </div>
+      <div style="background:var(--bg);border-radius:var(--radius-sm);padding:10px;margin-bottom:10px">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px">Zakres 3 (opcjonalnie)</div>
+        <div class="form-row"><label>Opis</label><input type="text" id="o-scope3" placeholder="np. Ocieplenie sciany"></div>
+        <div class="form-2">
+          <div class="form-row"><label>Powierzchnia (m²)</label><input type="number" id="o-area3" placeholder="—"></div>
+          <div class="form-row"><label>Grubość (cm)</label><input type="number" id="o-thick3" placeholder="—"></div>
+        </div>
       </div>
       <div style="border-top:1px solid var(--border);margin:10px 0;padding-top:10px">
         <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px">Ceny wariantów</div>
@@ -559,14 +578,25 @@ async function generateOffer(){
   const phone=document.getElementById('o-phone').value||'—';
   const email=document.getElementById('o-email').value||'—';
   const address=document.getElementById('o-address').value||'—';
-  const scope=document.getElementById('o-scope').value||'Ocieplenie połaci dachowej do stropu + strop';
-  const area=parseFloat(document.getElementById('o-area').value)||100;
-  const thick=parseFloat(document.getElementById('o-thick').value)||25;
+  const scope1=document.getElementById('o-scope1').value||'Ocieplenie połaci dachowej';
+  const area1=parseFloat(document.getElementById('o-area1').value)||0;
+  const thick1=parseFloat(document.getElementById('o-thick1').value)||0;
+  const scope2=document.getElementById('o-scope2').value||'';
+  const area2=parseFloat(document.getElementById('o-area2').value)||0;
+  const thick2=parseFloat(document.getElementById('o-thick2').value)||0;
+  const scope3=document.getElementById('o-scope3').value||'';
+  const area3=parseFloat(document.getElementById('o-area3').value)||0;
+  const thick3=parseFloat(document.getElementById('o-thick3').value)||0;
+  // Laczna powierzchnia do wyswietlenia
+  const totalArea=area1+area2+area3;
+  const scope=scope1;
+  const area=area1;
+  const thick=thick1;
   const p08=parseInt(document.getElementById('o-p08').value)||9500;
   const p09=parseInt(document.getElementById('o-p09').value)||11500;
   const p08b=Math.round(p08*1.08);
   const p09b=Math.round(p09*1.08);
-  const vol=(area*thick/100).toFixed(2);
+  // vol obliczane per zakres
   const offerDateInput=document.getElementById('o-date').value;
   let offerDate,validUntil;
   if(offerDateInput){
@@ -662,19 +692,43 @@ async function generateOffer(){
     drawText(p1,'WAŻNOSC OFERTY',391.4,165,6.5,fontR,GRAY);
     drawText(p1,`14 dni (do ${validUntil})`,391.4,176,9,fontB,BLACK);
 
-    setStatus('Wypełniam zakres prac...');
+    setStatus('Wypelniuam zakres prac...');
 
-    // === STRONA 3: zakres prac ===
+    // === STRONA 3: zakres prac (do 3 zakresow) ===
     const p3=pages[2];
-    // Przykryj cały zielony blok
+    // Przykryj caly zielony blok
     drawRect(p3,33,437,530,122,3,TEAL);
-    drawText(p3,scope,49,459,11,fontB,WHITE);
-    drawText(p3,'Powierzchnia',49,477,8,fontR,LIGHT);
-    drawText(p3,'Srednia grubosc',49,491,8,fontR,LIGHT);
-    drawText(p3,'Objetosc izolacji',49,505,8,fontR,LIGHT);
-    drawText(p3,`${area} m2`,238,477,10,fontB,WHITE);
-    drawText(p3,`${thick} cm`,238,491,10,fontB,WHITE);
-    drawText(p3,`${vol} m3`,238,505,10,fontB,WHITE);
+
+    // Buduj linie zakresu
+    const scopes=[];
+    if(scope1) scopes.push({desc:scope1, area:area1, thick:thick1});
+    if(scope2&&area2) scopes.push({desc:scope2, area:area2, thick:thick2});
+    if(scope3&&area3) scopes.push({desc:scope3, area:area3, thick:thick3});
+
+    if(scopes.length===1){
+      // Jeden zakres - oryginalny uklad
+      const vol1=(area1*thick1/100).toFixed(2);
+      drawText(p3,scope1,49,459,11,fontB,WHITE);
+      drawText(p3,'Powierzchnia',49,477,8,fontR,LIGHT);
+      drawText(p3,'Srednia grubosc',49,491,8,fontR,LIGHT);
+      drawText(p3,'Objetosc izolacji',49,505,8,fontR,LIGHT);
+      drawText(p3,area1+' m2',238,477,10,fontB,WHITE);
+      drawText(p3,thick1+' cm',238,491,10,fontB,WHITE);
+      drawText(p3,vol1+' m3',238,505,10,fontB,WHITE);
+    } else {
+      // Wiele zakresow - lista
+      let ty=455;
+      scopes.forEach((s,i)=>{
+        const vol=(s.area*s.thick/100).toFixed(2);
+        drawText(p3,(i+1)+'. '+s.desc,49,ty,9,fontB,WHITE);
+        ty+=11;
+        drawText(p3,s.area+'m2 / '+s.thick+'cm / obj: '+vol+'m3',49,ty,8,fontR,LIGHT);
+        ty+=13;
+      });
+      // Laczna powierzchnia
+      const totalVol=scopes.reduce((a,s)=>a+(s.area*s.thick/100),0).toFixed(2);
+      drawText(p3,'Laczna pow: '+totalArea+'m2  Laczna obj: '+totalVol+'m3',49,ty+2,8,fontB,WHITE);
+    }
 
     setStatus('Wypełniam ceny wariantów...');
 
@@ -706,7 +760,7 @@ async function generateOffer(){
     // Zapisz w historii
     const selCid=parseInt(document.getElementById('o-contact').value);
     if(selCid){const c=contacts.find(x=>x.id===selCid);if(c&&(c.status==='new'||c.status==='meeting'))c.status='sent';}
-    generatedOffers.unshift({name,address,scope,area,date:offerDateInput||todayStr(),url,filename});
+    generatedOffers.unshift({name,address,scope:scope1,area:totalArea,date:offerDateInput||todayStr(),url,filename});
 
     document.getElementById('offer-progress').style.display='none';
     document.getElementById('offer-result').style.display='block';
