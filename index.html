@@ -4,797 +4,803 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Budivo CRM</title>
-<!-- pdf-lib do edycji PDF po stronie klienta -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{
-  --or:#2EC4A0;--or-d:#1A9B80;--or-l:#E8F8F4;
-  --gr:#3B6D11;--gr-l:#EAF3DE;
-  --am:#854F0B;--am-l:#FAEEDA;
-  --bl:#185FA5;--bl-l:#E6F1FB;
-  --re:#A32D2D;--re-l:#FCEBEB;
-  --bg:#F9FAFB;--card:#fff;
-  --border:#E5E7EB;--border2:#D1FAF0;
-  --text:#111827;--muted:#6B7280;--light:#9CA3AF;
-  --radius:10px;--radius-sm:7px;
-}
+:root{--or:#2EC4A0;--or-d:#1A9B80;--or-l:#E8F8F4;--gr:#3B6D11;--gr-l:#EAF3DE;--am:#854F0B;--am-l:#FAEEDA;--bl:#185FA5;--bl-l:#E6F1FB;--re:#A32D2D;--re-l:#FCEBEB;--bg:#F9FAFB;--card:#fff;--border:#E5E7EB;--border2:#D1FAF0;--text:#111827;--muted:#6B7280;--light:#9CA3AF;--r:10px;--rs:7px;}
 html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:15px;overflow:hidden}
 .app{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;background:var(--bg);position:relative}
 .topbar{background:var(--card);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.topbar-left{display:flex;align-items:center;gap:10px}
-.logo-box{width:34px;height:34px;background:var(--or);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
-.logo-name{font-size:16px;font-weight:700}
-.logo-sub{font-size:11px;color:var(--muted)}
-.topbar-btn{width:36px;height:36px;border:1px solid var(--border);border-radius:var(--radius-sm);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:18px}
+.tb-left{display:flex;align-items:center;gap:10px}
+.logo{width:34px;height:34px;background:var(--or);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
+.tb-title{font-size:17px;font-weight:700}
+.tb-sub{font-size:11px;color:var(--muted)}
+.tb-btn{width:36px;height:36px;border:1px solid var(--border);border-radius:var(--rs);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:17px;flex-shrink:0}
 .content{flex:1;overflow-y:auto;padding:0 0 80px;-webkit-overflow-scrolling:touch}
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(5,1fr);z-index:50;padding-bottom:env(safe-area-inset-bottom,0)}
-.nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 8px;font-size:10px;color:var(--light);background:none;border:none;cursor:pointer}
-.nav-btn.active{color:var(--or)}
-.nav-fab{padding:6px 4px 4px;display:flex;flex-direction:column;align-items:center}
-.fab{width:50px;height:50px;background:var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;color:#fff;font-size:24px}
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(6,1fr);z-index:50;padding-bottom:env(safe-area-inset-bottom,0)}
+.nb{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px 6px;font-size:9px;color:var(--light);background:none;border:none;cursor:pointer}
+.nb.active{color:var(--or)}
+.nb span:first-child{font-size:19px}
+.fab-wrap{padding:4px 2px 2px;display:flex;flex-direction:column;align-items:center}
+.fab{width:46px;height:46px;background:var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;color:#fff;font-size:22px}
 .fab:active{background:var(--or-d)}
-.fab-label{font-size:9.5px;color:var(--muted);margin-top:1px}
-.section-pad{padding:16px 16px 0}
-.section-title{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px}
-.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.stat{background:var(--bg);border-radius:var(--radius-sm);padding:12px}
-.stat-label{font-size:11px;color:var(--muted);margin-bottom:4px}
-.stat-val{font-size:22px;font-weight:700}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px 14px;margin-bottom:8px;cursor:pointer}
+.sp{padding:14px 16px 0}
+.st{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.sc{background:var(--card);border-radius:var(--rs);padding:12px}
+.sc-l{font-size:11px;color:var(--muted);margin-bottom:3px}
+.sc-v{font-size:20px;font-weight:700}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;cursor:pointer;position:relative}
 .card:active{border-color:var(--or)}
-.card-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.card-name{font-size:14px;font-weight:600}
-.card-meta{font-size:12px;color:var(--muted);margin-top:2px}
-.badge{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500;white-space:nowrap}
-.s-new{background:#F3F4F6;color:var(--muted)}
-.s-meeting{background:var(--bl-l);color:var(--bl)}
-.s-sent{background:var(--am-l);color:var(--am)}
-.s-accepted{background:var(--gr-l);color:var(--gr)}
-.s-rejected{background:var(--re-l);color:var(--re)}
-.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-.quick-action{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:var(--muted)}
-.quick-action:active{background:var(--or-l)}
-.rem-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
-.rem-item.overdue{border-color:#FCA5A5;background:var(--re-l)}
+.ch{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cn{font-size:14px;font-weight:600}
+.cm{font-size:12px;color:var(--muted);margin-top:2px}
+.bdg{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500;white-space:nowrap}
+.s-new{background:#F3F4F6;color:var(--muted)}.s-meeting{background:var(--bl-l);color:var(--bl)}.s-sent{background:var(--am-l);color:var(--am)}.s-accepted{background:var(--gr-l);color:var(--gr)}.s-rejected{background:var(--re-l);color:var(--re)}
+.qg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.qa{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;font-size:10px;color:var(--muted);text-align:center}
+.qa:active{background:var(--or-l)}
+.qa span:first-child{font-size:22px}
+.rem{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;gap:11px}
+.rem.over{border-color:#FCA5A5;background:var(--re-l)}
 .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.d-meet{background:var(--bl)}.d-offer{background:var(--or)}.d-follow{background:var(--gr)}
-.check-btn{width:32px;height:32px;border:1px solid var(--border);border-radius:var(--radius-sm);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;color:var(--muted)}
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:flex-end;justify-content:center}
-.overlay.open{display:flex}
+.dm{background:var(--bl)}.do{background:var(--or)}.df{background:var(--gr)}
+.ckb{width:30px;height:30px;border:1px solid var(--border);border-radius:var(--rs);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px}
+.del-btn{width:30px;height:30px;border:1px solid #FCA5A5;border-radius:var(--rs);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;color:var(--re)}
+.ovl{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:flex-end;justify-content:center}
+.ovl.open{display:flex}
 .sheet{background:var(--card);border-radius:18px 18px 0 0;width:100%;max-width:480px;padding:16px 16px 32px;max-height:93vh;overflow-y:auto}
-.sheet-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px}
-.sheet-title{font-size:16px;font-weight:700;margin-bottom:14px}
+.sh{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 14px}
+.stitle{font-size:16px;font-weight:700;margin-bottom:13px}
 label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:500}
-input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;background:var(--card);color:var(--text);outline:none;font-family:inherit;-webkit-appearance:none}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--rs);font-size:14px;background:var(--card);color:var(--text);outline:none;font-family:inherit;-webkit-appearance:none}
 input:focus,select:focus,textarea:focus{border-color:var(--or)}
-textarea{height:64px;resize:none}
-.form-row{margin-bottom:12px}
-.form-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.btn-primary{width:100%;padding:14px;background:var(--or);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
-.btn-primary:active{background:var(--or-d)}
-.btn-primary:disabled{background:var(--light);cursor:not-allowed}
-.btn-secondary{width:100%;padding:12px;background:none;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;cursor:pointer;margin-top:8px;color:var(--text)}
-.avatar{width:40px;height:40px;border-radius:50%;background:var(--or-l);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--or);flex-shrink:0}
-.stepper{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:14px}
-.step{padding:7px 2px;text-align:center;font-size:10px;border-radius:var(--radius-sm);background:#F3F4F6;color:var(--muted);cursor:pointer}
-.step.done{background:var(--gr-l);color:var(--gr)}
-.step.active{background:var(--or);color:#fff;font-weight:700}
-.detail-field{padding:10px 12px;background:var(--bg);border-radius:var(--radius-sm);margin-bottom:8px}
-.detail-field-label{font-size:11px;color:var(--muted);margin-bottom:2px}
-.detail-field-val{font-size:13px;font-weight:600}
-.search-wrap{margin:12px 16px 6px;display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 12px}
-.search-wrap input{border:none;background:none;padding:10px 0;flex:1;font-size:14px;outline:none}
-.chips{display:flex;gap:6px;overflow-x:auto;padding:0 16px 10px;scrollbar-width:none}
+textarea{height:60px;resize:none}
+.fr{margin-bottom:11px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bp{width:100%;padding:13px;background:var(--or);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px}
+.bp:active{background:var(--or-d)}
+.bs{width:100%;padding:11px;background:none;border:1px solid var(--border);border-radius:var(--r);font-size:14px;cursor:pointer;margin-top:7px;color:var(--text)}
+.av{width:40px;height:40px;border-radius:50%;background:var(--or-l);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--or);flex-shrink:0}
+.stepper{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-bottom:12px}
+.step{padding:6px 2px;text-align:center;font-size:9px;border-radius:var(--rs);background:#F3F4F6;color:var(--muted);cursor:pointer}
+.step.done{background:var(--gr-l);color:var(--gr)}.step.active{background:var(--or);color:#fff;font-weight:700}
+.df-field{padding:10px 12px;background:var(--bg);border-radius:var(--rs);margin-bottom:7px}
+.df-label{font-size:11px;color:var(--muted);margin-bottom:2px}
+.df-val{font-size:13px;font-weight:600}
+.srch{margin:10px 16px 5px;display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:0 12px}
+.srch input{border:none;background:none;padding:10px 0;flex:1;font-size:14px;outline:none}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:0 16px 8px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
-.chip{padding:6px 13px;border-radius:20px;font-size:12px;white-space:nowrap;cursor:pointer;border:1px solid var(--border);background:none;color:var(--muted);flex-shrink:0}
+.chip{padding:5px 12px;border-radius:20px;font-size:12px;white-space:nowrap;cursor:pointer;border:1px solid var(--border);background:none;color:var(--muted);flex-shrink:0}
 .chip.active{background:var(--or);color:#fff;border-color:var(--or)}
-.funnel-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.funnel-label{font-size:11px;color:var(--muted);width:85px;flex-shrink:0}
-.funnel-bar{flex:1;height:6px;background:#F3F4F6;border-radius:3px;overflow:hidden}
-.funnel-fill{height:100%;background:var(--or);border-radius:3px}
-.funnel-count{font-size:11px;font-weight:600;width:20px;text-align:right;flex-shrink:0}
-.divider{height:1px;background:var(--border);margin:14px 0}
-.empty-state{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px}
-.gen-progress{text-align:center;padding:24px 0}
-.spinner{width:44px;height:44px;border:3px solid var(--border2);border-top-color:var(--or);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.offer-success{background:var(--or-l);border:1px solid var(--border2);border-radius:var(--radius);padding:16px;margin-top:10px;text-align:center}
-.offer-success-title{font-size:15px;font-weight:700;color:var(--or-d);margin-bottom:4px}
-.offer-success-sub{font-size:12px;color:var(--muted)}
-.download-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;background:var(--or);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;margin-top:12px}
-.download-btn:active{background:var(--or-d)}
-.error-box{background:var(--re-l);border:1px solid #FCA5A5;border-radius:var(--radius);padding:12px;margin-top:10px;font-size:13px;color:var(--re)}
+.fr-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.fr-label{font-size:11px;color:var(--muted);width:90px;flex-shrink:0}
+.fr-bar{flex:1;height:6px;background:#F3F4F6;border-radius:3px;overflow:hidden}
+.fr-fill{height:100%;background:var(--or);border-radius:3px}
+.fr-cnt{font-size:11px;font-weight:600;width:18px;text-align:right}
+.dvdr{height:1px;background:var(--border);margin:12px 0}
+.empty{text-align:center;padding:36px 20px;color:var(--muted);font-size:13px}
+.gp{text-align:center;padding:22px 0}
+.spin{width:42px;height:42px;border:3px solid var(--border2);border-top-color:var(--or);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 12px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.os{background:var(--or-l);border:1px solid var(--border2);border-radius:var(--r);padding:14px;margin-top:10px;text-align:center}
+.os-t{font-size:15px;font-weight:700;color:var(--or-d);margin-bottom:4px}
+.os-s{font-size:12px;color:var(--muted)}
+.dlb{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:var(--or);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;margin-top:10px}
+.eb{background:var(--re-l);border:1px solid #FCA5A5;border-radius:var(--r);padding:12px;margin-top:10px;font-size:13px;color:var(--re)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:12px}
+.cal-day{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:5px 3px;min-height:52px}
+.cal-day.today{border-color:var(--or);background:var(--or-l)}
+.cal-day.has-ev{border-color:var(--bl)}
+.cal-dd{font-size:12px;font-weight:600;text-align:center;margin-bottom:2px}
+.cal-ev{font-size:8px;background:var(--or);color:#fff;border-radius:3px;padding:1px 3px;margin-bottom:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.cal-ev.meet{background:var(--bl)}.cal-ev.follow{background:var(--gr)}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-nav-btn{width:32px;height:32px;border:1px solid var(--border);border-radius:var(--rs);background:none;cursor:pointer;font-size:16px}
+.rec-area{background:var(--bg);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.rec-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.rec-btn{width:52px;height:52px;border-radius:50%;background:var(--or);border:none;cursor:pointer;font-size:24px;color:#fff;flex-shrink:0}
+.rec-btn.rec{background:var(--re-l);border:2px solid var(--re)}
+.rec-time{font-size:22px;font-weight:700}
+.rec-lbl{font-size:11px;color:var(--muted)}
+.wave{display:flex;align-items:center;gap:2px;height:24px;margin-bottom:8px}
+.wb{flex:1;background:var(--border);border-radius:2px;min-height:3px}
+.tbox{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:10px;font-size:13px;color:var(--muted);min-height:44px;margin-bottom:8px;line-height:1.5}
+.ai-box{background:#E1F5EE;border:1px solid #5DCAA5;border-radius:var(--rs);padding:10px;margin-top:6px}
+.ai-lbl{font-size:10px;font-weight:600;color:#0F6E56;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.ai-txt{font-size:13px;color:#085041;line-height:1.5}
+.note-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:11px;margin-bottom:7px}
+.note-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.note-ai{font-size:12px;color:#0F6E56;margin-top:5px;padding-top:5px;border-top:1px solid var(--border2)}
+.wa-tpl{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:8px}
+.wa-tpl-name{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px}
+.wa-tpl-text{font-size:13px;color:var(--text);line-height:1.5;margin-bottom:8px}
+.wa-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;background:#25D366;color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer}
+.hist-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)}
+.hist-dot{width:8px;height:8px;border-radius:50%;background:var(--or);flex-shrink:0}
+.hist-txt{font-size:13px;flex:1}
+.hist-date{font-size:11px;color:var(--muted)}
+.photos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.photo-thumb{aspect-ratio:1;border-radius:var(--rs);overflow:hidden;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.photo-thumb img{width:100%;height:100%;object-fit:cover}
+.photo-del{position:absolute;top:3px;right:3px;width:20px;height:20px;background:rgba(163,45,45,.8);color:#fff;border:none;border-radius:50%;font-size:11px;cursor:pointer}
+.add-photo{border:2px dashed var(--border);font-size:22px;color:var(--light)}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:80px;margin-bottom:6px}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bar{width:100%;background:var(--or-l);border-radius:3px 3px 0 0;min-height:4px}
+.bar.cur{background:var(--or)}
+.bar-lbl{font-size:9px;color:var(--muted)}
+.bar-val{font-size:9px;font-weight:600;color:var(--or-d)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.pulse{animation:pulse 1.2s ease-in-out infinite}
 </style>
 </head>
 <body>
-<div class="app" id="app">
+<div class="app">
 
 <!-- HOME -->
 <div id="scr-home" style="display:flex;flex-direction:column;height:100%">
   <div class="topbar">
-    <div class="topbar-left">
-      <div class="logo-box">🏠</div>
-      <div><div class="logo-name">Budivo CRM</div><div class="logo-sub" id="today-label"></div></div>
+    <div class="tb-left"><div class="logo">🏠</div><div><div class="tb-title">Budivo CRM</div><div class="tb-sub" id="today-lbl"></div></div></div>
+    <button class="tb-btn" onclick="openSheet('sh-contact')">+</button>
+  </div>
+  <div class="content"><div class="sp">
+    <div class="qg">
+      <div class="qa" onclick="openSheet('sh-contact')"><span>👤</span>Nowy kontakt</div>
+      <div class="qa" onclick="openSheet('sh-offer')"><span>📄</span>Generuj ofertę</div>
+      <div class="qa" onclick="openSheet('sh-voice')"><span>🎤</span>Notatka głosowa</div>
+      <div class="qa" onclick="openSheet('sh-reminder')"><span>🔔</span>Nowy termin</div>
+      <div class="qa" onclick="showScreen('calendar')"><span>📅</span>Kalendarz</div>
+      <div class="qa" onclick="showScreen('stats')"><span>📊</span>Statystyki</div>
     </div>
-    <button class="topbar-btn" onclick="openSheet('sheet-contact')">+</button>
-  </div>
-  <div class="content">
-    <div class="section-pad">
-      <div class="quick-grid">
-        <div class="quick-action" onclick="openSheet('sheet-contact')">👤<span>Nowy kontakt</span></div>
-        <div class="quick-action" onclick="openSheet('sheet-offer-gen')">📄<span>Generuj ofertę</span></div>
-        <div class="quick-action" onclick="openSheet('sheet-reminder')">🔔<span>Nowy termin</span></div>
-      </div>
-      <div class="section-title">Przegląd</div>
-      <div class="stat-row" id="stats-home"></div>
-      <div class="section-title">Lejek sprzedaży</div>
-      <div id="funnel-home" style="margin-bottom:16px"></div>
-      <div class="section-title">Zaległe terminy</div>
-      <div id="home-reminders"></div>
-      <div class="divider"></div>
-      <div class="section-title">Ostatnie kontakty</div>
-      <div id="home-contacts"></div>
-    </div>
-  </div>
-  <div class="bottom-nav">
-    <button class="nav-btn active" onclick="showScreen('home')">🏠<span>Pulpit</span></button>
-    <button class="nav-btn" onclick="showScreen('contacts')">👥<span>Kontakty</span></button>
-    <div class="nav-fab"><button class="fab" onclick="openSheet('sheet-offer-gen')">📄</button><span class="fab-label">Oferta</span></div>
-    <button class="nav-btn" onclick="showScreen('reminders')">🔔<span>Terminy</span></button>
-    <button class="nav-btn" onclick="showScreen('offers')">📋<span>Oferty</span></button>
-  </div>
+    <div class="st">Przegląd</div>
+    <div class="sg" id="stats-home"></div>
+    <div class="st">Lejek sprzedaży</div>
+    <div id="funnel-home" style="margin-bottom:14px"></div>
+    <div class="st">Zaległe terminy</div>
+    <div id="home-rems"></div>
+    <div class="dvdr"></div>
+    <div class="st">Ostatnie kontakty</div>
+    <div id="home-contacts"></div>
+  </div></div>
+  <div class="bnav" id="bnav-home"></div>
 </div>
 
 <!-- CONTACTS -->
 <div id="scr-contacts" style="display:none;flex-direction:column;height:100%">
-  <div class="topbar"><div style="font-size:17px;font-weight:700">Kontakty</div><button class="topbar-btn" onclick="openSheet('sheet-contact')">+</button></div>
-  <div class="search-wrap">🔍<input type="text" id="contacts-search" placeholder="Szukaj..." oninput="renderContacts()"></div>
-  <div class="chips" id="contacts-chips"></div>
-  <div class="content" style="padding-top:4px"><div class="section-pad" id="contacts-list"></div></div>
-  <div class="bottom-nav">
-    <button class="nav-btn" onclick="showScreen('home')">🏠<span>Pulpit</span></button>
-    <button class="nav-btn active" onclick="showScreen('contacts')">👥<span>Kontakty</span></button>
-    <div class="nav-fab"><button class="fab" onclick="openSheet('sheet-offer-gen')">📄</button><span class="fab-label">Oferta</span></div>
-    <button class="nav-btn" onclick="showScreen('reminders')">🔔<span>Terminy</span></button>
-    <button class="nav-btn" onclick="showScreen('offers')">📋<span>Oferty</span></button>
-  </div>
+  <div class="topbar"><div class="tb-title">Kontakty</div><button class="tb-btn" onclick="openSheet('sh-contact')">+</button></div>
+  <div class="srch">🔍<input type="text" id="c-search" placeholder="Szukaj..." oninput="renderContacts()"></div>
+  <div class="chips" id="c-chips"></div>
+  <div class="content" style="padding-top:4px"><div class="sp" id="c-list"></div></div>
+  <div class="bnav" id="bnav-contacts"></div>
 </div>
 
 <!-- REMINDERS -->
 <div id="scr-reminders" style="display:none;flex-direction:column;height:100%">
-  <div class="topbar"><div style="font-size:17px;font-weight:700">Terminy</div><button class="topbar-btn" onclick="openSheet('sheet-reminder')">+</button></div>
-  <div class="chips" id="rem-chips"></div>
-  <div class="content"><div class="section-pad" id="reminders-list"></div></div>
-  <div class="bottom-nav">
-    <button class="nav-btn" onclick="showScreen('home')">🏠<span>Pulpit</span></button>
-    <button class="nav-btn" onclick="showScreen('contacts')">👥<span>Kontakty</span></button>
-    <div class="nav-fab"><button class="fab" onclick="openSheet('sheet-offer-gen')">📄</button><span class="fab-label">Oferta</span></div>
-    <button class="nav-btn active" onclick="showScreen('reminders')">🔔<span>Terminy</span></button>
-    <button class="nav-btn" onclick="showScreen('offers')">📋<span>Oferty</span></button>
-  </div>
+  <div class="topbar"><div class="tb-title">Terminy</div><button class="tb-btn" onclick="openSheet('sh-reminder')">+</button></div>
+  <div class="chips" id="r-chips"></div>
+  <div class="content"><div class="sp" id="r-list"></div></div>
+  <div class="bnav" id="bnav-reminders"></div>
 </div>
 
 <!-- OFFERS -->
 <div id="scr-offers" style="display:none;flex-direction:column;height:100%">
-  <div class="topbar"><div style="font-size:17px;font-weight:700">Wygenerowane oferty</div><button class="topbar-btn" onclick="openSheet('sheet-offer-gen')">+</button></div>
-  <div class="content"><div class="section-pad" id="offers-list"></div></div>
-  <div class="bottom-nav">
-    <button class="nav-btn" onclick="showScreen('home')">🏠<span>Pulpit</span></button>
-    <button class="nav-btn" onclick="showScreen('contacts')">👥<span>Kontakty</span></button>
-    <div class="nav-fab"><button class="fab" onclick="openSheet('sheet-offer-gen')">📄</button><span class="fab-label">Oferta</span></div>
-    <button class="nav-btn" onclick="showScreen('reminders')">🔔<span>Terminy</span></button>
-    <button class="nav-btn active" onclick="showScreen('offers')">📋<span>Oferty</span></button>
-  </div>
+  <div class="topbar"><div class="tb-title">Oferty</div><button class="tb-btn" onclick="openSheet('sh-offer')">+</button></div>
+  <div class="content"><div class="sp" id="o-list"></div></div>
+  <div class="bnav" id="bnav-offers"></div>
+</div>
+
+<!-- CALENDAR -->
+<div id="scr-calendar" style="display:none;flex-direction:column;height:100%">
+  <div class="topbar"><button class="tb-btn" onclick="showScreen('home')">←</button><div class="tb-title" style="flex:1;margin-left:8px">Kalendarz</div></div>
+  <div class="content"><div class="sp">
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="calPrev()">‹</button>
+      <div style="font-size:14px;font-weight:600" id="cal-title"></div>
+      <button class="cal-nav-btn" onclick="calNext()">›</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:5px">
+      <div style="text-align:center;font-size:10px;color:var(--muted)">Pn</div><div style="text-align:center;font-size:10px;color:var(--muted)">Wt</div><div style="text-align:center;font-size:10px;color:var(--muted)">Śr</div><div style="text-align:center;font-size:10px;color:var(--muted)">Cz</div><div style="text-align:center;font-size:10px;color:var(--muted)">Pt</div><div style="text-align:center;font-size:10px;color:var(--muted)">Sb</div><div style="text-align:center;font-size:10px;color:var(--muted)">Nd</div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="st">Terminy w tym miesiącu</div>
+    <div id="cal-list"></div>
+  </div></div>
+</div>
+
+<!-- STATS -->
+<div id="scr-stats" style="display:none;flex-direction:column;height:100%">
+  <div class="topbar"><button class="tb-btn" onclick="showScreen('home')">←</button><div class="tb-title" style="flex:1;margin-left:8px">Statystyki</div></div>
+  <div class="content"><div class="sp" id="stats-content"></div></div>
 </div>
 
 <!-- DETAIL -->
 <div id="scr-detail" style="display:none;flex-direction:column;height:100%">
   <div class="topbar">
-    <button class="topbar-btn" onclick="goBack()">←</button>
-    <div style="font-size:16px;font-weight:700;flex:1;margin-left:8px" id="detail-title">Kontakt</div>
-    <button class="topbar-btn" onclick="openOfferForDetail()" title="Generuj ofertę" style="color:var(--or)">📄</button>
+    <button class="tb-btn" onclick="goBack()">←</button>
+    <div class="tb-title" style="flex:1;margin-left:8px" id="det-title">Kontakt</div>
+    <button class="tb-btn" onclick="openOfferForDetail()" style="color:var(--or)">📄</button>
+    <button class="tb-btn" onclick="openVoiceForDetail()" style="color:var(--bl);margin-left:4px">🎤</button>
   </div>
-  <div class="content"><div class="section-pad" id="detail-content"></div></div>
+  <div class="content"><div class="sp" id="det-content"></div></div>
 </div>
 
-<!-- SHEET: Nowy kontakt -->
-<div class="overlay" id="sheet-contact" onclick="overlayClick(event,'sheet-contact')">
+<!-- SHEET: Kontakt -->
+<div class="ovl" id="sh-contact" onclick="ovc(event,'sh-contact')">
   <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">👤 Nowy kontakt</div>
-    <div class="form-row"><label>Imię i nazwisko / Firma *</label><input type="text" id="c-name" placeholder="Jan Kowalski"></div>
-    <div class="form-2">
-      <div class="form-row"><label>Telefon</label><input type="tel" id="c-phone" placeholder="+48 500 000 000"></div>
-      <div class="form-row"><label>Email</label><input type="email" id="c-email" placeholder="jan@email.com"></div>
+    <div class="sh"></div><div class="stitle">👤 Nowy kontakt</div>
+    <div class="fr"><label>Imię i nazwisko / Firma *</label><input type="text" id="c-name" placeholder="Jan Kowalski"></div>
+    <div class="f2"><div class="fr"><label>Telefon</label><input type="tel" id="c-phone" placeholder="+48 500 000 000"></div><div class="fr"><label>Email</label><input type="email" id="c-email" placeholder="jan@email.com"></div></div>
+    <div class="f2"><div class="fr"><label>Miasto</label><input type="text" id="c-city" placeholder="Rzeszów"></div><div class="fr"><label>Adres inwestycji</label><input type="text" id="c-addr" placeholder="ul. Słoneczna 12"></div></div>
+    <div class="f2">
+      <div class="fr"><label>Produkt</label><select id="c-prod"><option value="piana PUR">Piana PUR</option><option value="celuloza">Celuloza</option><option value="oba">Oba</option></select></div>
+      <div class="fr"><label>Wartość (zł)</label><input type="number" id="c-val" placeholder="8000"></div>
     </div>
-    <div class="form-2">
-      <div class="form-row"><label>Miasto</label><input type="text" id="c-city" placeholder="Rzeszów"></div>
-      <div class="form-row"><label>Adres inwestycji</label><input type="text" id="c-address" placeholder="ul. Słoneczna 12"></div>
-    </div>
-    <div class="form-2">
-      <div class="form-row"><label>Produkt</label>
-        <select id="c-product"><option value="piana PUR">Piana PUR</option><option value="celuloza">Celuloza</option><option value="oba">Oba</option></select>
-      </div>
-      <div class="form-row"><label>Wartość (zł)</label><input type="number" id="c-value" placeholder="8000"></div>
-    </div>
-    <div class="form-row"><label>Uwagi z oględzin</label><textarea id="c-notes" placeholder="Poddasze 90m², grubość 25cm..."></textarea></div>
-    <div style="border-top:1px solid var(--border);margin:12px 0;padding-top:12px">
-      <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:10px">Przypomnienie (opcjonalne)</div>
-      <div class="form-2">
-        <div class="form-row"><label>Typ</label>
-          <select id="c-rtype"><option value="">— brak —</option><option value="meeting">Spotkanie</option><option value="offer">Wyślij ofertę</option><option value="follow">Follow-up</option></select>
-        </div>
-        <div class="form-row"><label>Data</label><input type="date" id="c-rdate"></div>
-      </div>
-    </div>
-    <button class="btn-primary" onclick="saveContact()">✓ Zapisz kontakt</button>
-    <button class="btn-secondary" onclick="closeSheet('sheet-contact')">Anuluj</button>
+    <div class="fr"><label>Uwagi z oględzin</label><textarea id="c-notes" placeholder="Poddasze 90m², grubość 25cm..."></textarea></div>
+    <div style="border-top:1px solid var(--border);margin:10px 0 8px;padding-top:10px;font-size:12px;font-weight:600;color:var(--muted)">Przypomnienie (opcjonalnie)</div>
+    <div class="f2"><div class="fr"><label>Typ</label><select id="c-rtype"><option value="">— brak —</option><option value="meeting">Spotkanie</option><option value="offer">Wyślij ofertę</option><option value="follow">Follow-up</option></select></div><div class="fr"><label>Data</label><input type="date" id="c-rdate"></div></div>
+    <button class="bp" onclick="saveContact()">✓ Zapisz kontakt</button>
+    <button class="bs" onclick="closeSheet('sh-contact')">Anuluj</button>
   </div>
 </div>
 
-<!-- SHEET: Nowy termin -->
-<div class="overlay" id="sheet-reminder" onclick="overlayClick(event,'sheet-reminder')">
+<!-- SHEET: Termin -->
+<div class="ovl" id="sh-reminder" onclick="ovc(event,'sh-reminder')">
   <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">🔔 Nowy termin</div>
-    <div class="form-row"><label>Kontakt</label><select id="r-contact" style="width:100%"></select></div>
-    <div class="form-2">
-      <div class="form-row"><label>Typ</label>
-        <select id="r-type"><option value="meeting">Spotkanie</option><option value="offer">Wyślij ofertę</option><option value="follow">Follow-up</option></select>
+    <div class="sh"></div><div class="stitle">🔔 Nowy termin</div>
+    <div class="fr"><label>Kontakt</label><select id="r-cid" style="width:100%"></select></div>
+    <div class="f2"><div class="fr"><label>Typ</label><select id="r-type"><option value="meeting">Spotkanie</option><option value="offer">Wyślij ofertę</option><option value="follow">Follow-up</option></select></div><div class="fr"><label>Data</label><input type="date" id="r-date"></div></div>
+    <div class="fr"><label>Opis</label><input type="text" id="r-note" placeholder="np. Wycena poddasza"></div>
+    <button class="bp" onclick="saveReminder()">Dodaj termin</button>
+    <button class="bs" onclick="closeSheet('sh-reminder')">Anuluj</button>
+  </div>
+</div>
+
+<!-- SHEET: Notatka głosowa -->
+<div class="ovl" id="sh-voice" onclick="ovc(event,'sh-voice')">
+  <div class="sheet">
+    <div class="sh"></div><div class="stitle">🎤 Notatka głosowa</div>
+    <div class="fr"><label>Kontakt (opcjonalnie)</label><select id="v-cid" style="width:100%"></select></div>
+    <div class="rec-area">
+      <div class="rec-row">
+        <button class="rec-btn" id="rec-btn" onclick="toggleRec()">🎤</button>
+        <div><div class="rec-time" id="rec-time">0:00</div><div class="rec-lbl" id="rec-lbl">Kliknij aby nagrać</div></div>
       </div>
-      <div class="form-row"><label>Data</label><input type="date" id="r-date"></div>
+      <div class="wave" id="wave"></div>
     </div>
-    <div class="form-row"><label>Opis</label><input type="text" id="r-note" placeholder="np. Wycena poddasza"></div>
-    <button class="btn-primary" onclick="saveReminder()">Dodaj termin</button>
-    <button class="btn-secondary" onclick="closeSheet('sheet-reminder')">Anuluj</button>
+    <div class="tbox" id="tbox">Tutaj pojawi się transkrypcja...</div>
+    <div id="ai-area"></div>
+    <div id="v-actions"></div>
+    <button class="bs" onclick="closeSheet('sh-voice');stopRec()">Zamknij</button>
+  </div>
+</div>
+
+<!-- SHEET: WhatsApp -->
+<div class="ovl" id="sh-whatsapp" onclick="ovc(event,'sh-whatsapp')">
+  <div class="sheet">
+    <div class="sh"></div><div class="stitle">💬 Szablony WhatsApp</div>
+    <div id="wa-templates"></div>
+    <button class="bs" onclick="closeSheet('sh-whatsapp')">Zamknij</button>
   </div>
 </div>
 
 <!-- SHEET: Generator oferty -->
-<div class="overlay" id="sheet-offer-gen" onclick="overlayClick(event,'sheet-offer-gen')">
+<div class="ovl" id="sh-offer" onclick="ovc(event,'sh-offer')">
   <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">📄 Generuj ofertę PDF</div>
-    <div id="offer-form">
-      <div class="form-row"><label>Klient (opcjonalnie — wypełni dane automatycznie)</label>
-        <select id="o-contact" style="width:100%" onchange="fillFromContact()"></select>
+    <div class="sh"></div><div class="stitle">📄 Generuj ofertę PDF</div>
+    <div id="off-form">
+      <div class="fr"><label>Klient</label><select id="o-cid" style="width:100%" onchange="fillFromC()"></select></div>
+      <div class="f2"><div class="fr"><label>Imię i nazwisko *</label><input type="text" id="o-name" placeholder="Jan Kowalski"></div><div class="fr"><label>Telefon</label><input type="tel" id="o-phone" placeholder="600 100 200"></div></div>
+      <div class="f2"><div class="fr"><label>Email</label><input type="email" id="o-email" placeholder="jan@email.com"></div><div class="fr"><label>Adres inwestycji</label><input type="text" id="o-addr" placeholder="ul. Słoneczna 12"></div></div>
+      <div style="border-top:1px solid var(--border);margin:8px 0;padding-top:8px;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px">Zakresy prac</div>
+      <div style="background:var(--bg);border-radius:var(--rs);padding:10px;margin-bottom:8px">
+        <div style="font-size:11px;font-weight:600;color:var(--or-d);margin-bottom:7px">Zakres 1 *</div>
+        <div class="fr"><label>Opis</label><input type="text" id="o-s1" value="Ocieplenie połaci dachowej"></div>
+        <div class="f2"><div class="fr"><label>Powierzchnia (m²)</label><input type="number" id="o-a1" value="100"></div><div class="fr"><label>Grubość (cm)</label><input type="number" id="o-t1" value="25"></div></div>
       </div>
-      <div class="form-2">
-        <div class="form-row"><label>Imię i nazwisko *</label><input type="text" id="o-name" placeholder="Jan Kowalski"></div>
-        <div class="form-row"><label>Telefon</label><input type="tel" id="o-phone" placeholder="600 100 200"></div>
+      <div style="background:var(--bg);border-radius:var(--rs);padding:10px;margin-bottom:8px">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:7px">Zakres 2 (opcjonalnie)</div>
+        <div class="fr"><label>Opis</label><input type="text" id="o-s2" placeholder="np. Ocieplenie stropu"></div>
+        <div class="f2"><div class="fr"><label>Powierzchnia (m²)</label><input type="number" id="o-a2" placeholder="—"></div><div class="fr"><label>Grubość (cm)</label><input type="number" id="o-t2" placeholder="—"></div></div>
       </div>
-      <div class="form-2">
-        <div class="form-row"><label>Email</label><input type="email" id="o-email" placeholder="jan@email.com"></div>
-        <div class="form-row"><label>Adres inwestycji</label><input type="text" id="o-address" placeholder="ul. Słoneczna 12, Rzeszów"></div>
+      <div style="background:var(--bg);border-radius:var(--rs);padding:10px;margin-bottom:8px">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:7px">Zakres 3 (opcjonalnie)</div>
+        <div class="fr"><label>Opis</label><input type="text" id="o-s3" placeholder="np. Ocieplenie ściany"></div>
+        <div class="f2"><div class="fr"><label>Powierzchnia (m²)</label><input type="number" id="o-a3" placeholder="—"></div><div class="fr"><label>Grubość (cm)</label><input type="number" id="o-t3" placeholder="—"></div></div>
       </div>
-      <div style="border-top:1px solid var(--border);margin:10px 0;padding-top:10px">
-        <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px">Zakres prac</div>
-      </div>
-      <div style="background:var(--bg);border-radius:var(--radius-sm);padding:10px;margin-bottom:10px">
-        <div style="font-size:11px;font-weight:600;color:var(--or-d);margin-bottom:8px">Zakres 1 *</div>
-        <div class="form-row"><label>Opis</label><input type="text" id="o-scope1" value="Ocieplenie połaci dachowej" placeholder="np. Ocieplenie poddasza"></div>
-        <div class="form-2">
-          <div class="form-row"><label>Powierzchnia (m²)</label><input type="number" id="o-area1" value="100" placeholder="100"></div>
-          <div class="form-row"><label>Grubość (cm)</label><input type="number" id="o-thick1" value="25" placeholder="25"></div>
-        </div>
-      </div>
-      <div style="background:var(--bg);border-radius:var(--radius-sm);padding:10px;margin-bottom:10px">
-        <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px">Zakres 2 (opcjonalnie)</div>
-        <div class="form-row"><label>Opis</label><input type="text" id="o-scope2" placeholder="np. Ocieplenie stropu"></div>
-        <div class="form-2">
-          <div class="form-row"><label>Powierzchnia (m²)</label><input type="number" id="o-area2" placeholder="—"></div>
-          <div class="form-row"><label>Grubość (cm)</label><input type="number" id="o-thick2" placeholder="—"></div>
-        </div>
-      </div>
-      <div style="background:var(--bg);border-radius:var(--radius-sm);padding:10px;margin-bottom:10px">
-        <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px">Zakres 3 (opcjonalnie)</div>
-        <div class="form-row"><label>Opis</label><input type="text" id="o-scope3" placeholder="np. Ocieplenie sciany"></div>
-        <div class="form-2">
-          <div class="form-row"><label>Powierzchnia (m²)</label><input type="number" id="o-area3" placeholder="—"></div>
-          <div class="form-row"><label>Grubość (cm)</label><input type="number" id="o-thick3" placeholder="—"></div>
-        </div>
-      </div>
-      <div style="border-top:1px solid var(--border);margin:10px 0;padding-top:10px">
-        <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px">Ceny wariantów</div>
-      </div>
-      <div class="form-2">
-        <div class="form-row"><label>EXY 08 — netto (zł)</label><input type="number" id="o-p08" value="9500" placeholder="9500"></div>
-        <div class="form-row"><label>EXY 09 — netto (zł)</label><input type="number" id="o-p09" value="11500" placeholder="11500"></div>
-      </div>
-      <div class="form-row"><label>EXY 09+ — netto (zł, opcjonalnie)</label><input type="number" id="o-p09plus" placeholder="wpisz lub zostaw puste = Cena na zapytanie"></div>
-      <div class="form-row"><label>Data oferty</label><input type="date" id="o-date"></div>
-      <button class="btn-primary" id="gen-btn" onclick="generateOffer()">📄 Generuj ofertę PDF</button>
-      <button class="btn-secondary" onclick="closeSheet('sheet-offer-gen')">Anuluj</button>
+      <div style="border-top:1px solid var(--border);margin:8px 0;padding-top:8px;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px">Ceny wariantów</div>
+      <div class="f2"><div class="fr"><label>EXY 08 netto (zł)</label><input type="number" id="o-p08" value="9500"></div><div class="fr"><label>EXY 09 netto (zł)</label><input type="number" id="o-p09" value="11500"></div></div>
+      <div class="fr"><label>EXY 09+ netto (zł, opcjonalnie)</label><input type="number" id="o-p09p" placeholder="zostaw puste = Cena na zapytanie"></div>
+      <div class="fr"><label>Data oferty</label><input type="date" id="o-date"></div>
+      <button class="bp" onclick="generateOffer()">📄 Generuj ofertę PDF</button>
+      <button class="bs" onclick="closeSheet('sh-offer')">Anuluj</button>
     </div>
-    <div id="offer-progress" style="display:none">
-      <div class="gen-progress">
-        <div class="spinner"></div>
-        <div style="font-size:14px;font-weight:600" id="gen-status">Wczytuję szablon...</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:4px">Proszę czekać</div>
-      </div>
+    <div id="off-prog" style="display:none"><div class="gp"><div class="spin"></div><div style="font-size:14px;font-weight:600" id="off-status">Wczytuję szablon...</div></div></div>
+    <div id="off-result" style="display:none">
+      <div class="os"><div class="os-t">✓ Oferta gotowa!</div><div class="os-s" id="off-rsub"></div></div>
+      <button class="dlb" id="off-dl">⬇ Pobierz PDF</button>
+      <button class="bs" onclick="resetOffer()">Nowa oferta</button>
+      <button class="bs" onclick="closeSheet('sh-offer')">Zamknij</button>
     </div>
-    <div id="offer-result" style="display:none">
-      <div class="offer-success">
-        <div class="offer-success-title">✓ Oferta gotowa!</div>
-        <div class="offer-success-sub" id="offer-result-sub"></div>
-      </div>
-      <button class="download-btn" id="offer-dl-btn">⬇ Pobierz PDF</button>
-      <button class="btn-secondary" style="margin-top:8px" onclick="resetOffer()">Nowa oferta</button>
-      <button class="btn-secondary" onclick="closeSheet('sheet-offer-gen')">Zamknij</button>
-    </div>
-    <div id="offer-error" style="display:none">
-      <div class="error-box" id="offer-error-msg"></div>
-      <button class="btn-secondary" style="margin-top:8px" onclick="resetOffer()">Spróbuj ponownie</button>
-    </div>
+    <div id="off-err" style="display:none"><div class="eb" id="off-errmsg"></div><button class="bs" onclick="resetOffer()">Spróbuj ponownie</button></div>
   </div>
 </div>
 
 <script>
-// ===== DANE =====
 const SL={new:'Nowy lead',meeting:'Spotkanie',sent:'Oferta wysłana',accepted:'Zaakceptowana',rejected:'Odrzucona'};
 const SC={new:'s-new',meeting:'s-meeting',sent:'s-sent',accepted:'s-accepted',rejected:'s-rejected'};
 const RT={meeting:'Spotkanie',offer:'Wyślij ofertę',follow:'Follow-up'};
-const RD={meeting:'d-meet',offer:'d-offer',follow:'d-follow'};
+const RD={meeting:'dm',offer:'do',follow:'df'};
 const STEPS=['new','meeting','sent','accepted','rejected'];
 const SLB=['Nowy','Spotkanie','Wysłana','Zaakc.','Odrzuc.'];
+const MONTHS=['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
 
 let contacts=[
-  {id:1,name:'Marek Nowak',phone:'501 234 567',email:'m.nowak@gmail.com',city:'Rzeszów',address:'ul. Polna 5',product:'piana PUR',status:'accepted',value:8500,notes:'Poddasze 95m², zrobione.',added:'2025-01-10'},
-  {id:2,name:'Budex Sp. z o.o.',phone:'17 555 0100',email:'biuro@budex.pl',city:'Łańcut',address:'ul. Przemysłowa 3',product:'celuloza',status:'sent',value:22000,notes:'Hala 400m².',added:'2025-01-15'},
-  {id:3,name:'Anna Wiśniewska',phone:'606 789 012',email:'anna.w@wp.pl',city:'Leżajsk',address:'ul. Słoneczna 12',product:'oba',status:'meeting',value:6200,notes:'Dom jednorodzinny.',added:'2025-01-18'},
-  {id:4,name:'Piotr Zając',phone:'512 333 444',email:'pzajac@o2.pl',city:'Rzeszów',address:'os. Paderewskiego 8',product:'piana PUR',status:'new',value:4500,notes:'Zapytanie przez stronę.',added:'2025-01-20'},
+  {id:1,name:'Marek Nowak',phone:'501 234 567',email:'m.nowak@gmail.com',city:'Rzeszów',address:'ul. Polna 5',product:'piana PUR',status:'accepted',value:8500,notes:'Poddasze 95m², zrobione.',added:'2025-01-10',history:[{status:'new',date:'2025-01-10'},{status:'accepted',date:'2025-01-16'}],photos:[],notes_voice:[]},
+  {id:2,name:'Budex Sp. z o.o.',phone:'17 555 0100',email:'biuro@budex.pl',city:'Łańcut',address:'ul. Przemysłowa 3',product:'celuloza',status:'sent',value:22000,notes:'Hala 400m².',added:'2025-01-15',history:[{status:'new',date:'2025-01-15'},{status:'sent',date:'2025-01-20'}],photos:[],notes_voice:[]},
+  {id:3,name:'Anna Wiśniewska',phone:'606 789 012',email:'anna.w@wp.pl',city:'Leżajsk',address:'ul. Słoneczna 12',product:'oba',status:'meeting',value:6200,notes:'Dom jednorodzinny.',added:'2025-01-18',history:[{status:'new',date:'2025-01-18'},{status:'meeting',date:'2025-01-20'}],photos:[],notes_voice:[]},
+  {id:4,name:'Piotr Zając',phone:'512 333 444',email:'pzajac@o2.pl',city:'Rzeszów',address:'os. Paderewskiego 8',product:'piana PUR',status:'new',value:4500,notes:'Zapytanie przez stronę.',added:'2025-01-20',history:[{status:'new',date:'2025-01-20'}],photos:[],notes_voice:[]},
 ];
 let reminders=[
   {id:1,cid:3,type:'meeting',date:'2025-01-25',note:'Spotkanie ul. Słoneczna 12',done:false},
   {id:2,cid:2,type:'follow',date:'2025-01-22',note:'Zadzwoń ws. oferty',done:false},
   {id:3,cid:4,type:'offer',date:'2025-01-21',note:'Wyślij wycenę',done:false},
 ];
-let generatedOffers=[];
+let genOffers=[];
 let nextId=5,nextRid=4,cFilter='all',rFilter='all';
 let detailId=null,prevScreen='home';
-let currentPdfUrl=null,currentPdfName=null;
+let isRec=false,recSecs=0,recInt=null,wvInt=null;
+let calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
 
-// ===== NAWIGACJA =====
 function showScreen(name){
-  ['home','contacts','reminders','offers','detail'].forEach(s=>{
-    const el=document.getElementById('scr-'+s);
-    if(el)el.style.display='none';
-  });
-  const el=document.getElementById('scr-'+name);
-  if(el){el.style.display='flex';el.style.flexDirection='column';}
-  if(name==='home')renderHome();
-  if(name==='contacts')renderContacts();
-  if(name==='reminders')renderReminders();
-  if(name==='offers')renderOffers();
+  ['home','contacts','reminders','offers','calendar','stats','detail'].forEach(s=>{const el=document.getElementById('scr-'+s);if(el)el.style.display='none';});
+  const el=document.getElementById('scr-'+name);if(el){el.style.display='flex';el.style.flexDirection='column';}
+  renderNav(name);
+  if(name==='home')renderHome();if(name==='contacts')renderContacts();
+  if(name==='reminders')renderReminders();if(name==='offers')renderOffers();
+  if(name==='calendar')renderCalendar();if(name==='stats')renderStats();
 }
 function goBack(){showScreen(prevScreen);}
-function getCurrentScreen(){
-  return ['home','contacts','reminders','offers','detail'].find(s=>{
-    const el=document.getElementById('scr-'+s);
-    return el&&el.style.display!=='none';
-  })||'home';
+function getCur(){return['home','contacts','reminders','offers','calendar','stats','detail'].find(s=>{const el=document.getElementById('scr-'+s);return el&&el.style.display!=='none';})||'home';}
+
+function renderNav(active){
+  const items=[
+    {id:'home',icon:'🏠',label:'Pulpit'},{id:'contacts',icon:'👥',label:'Kontakty'},
+    {fab:true},{id:'reminders',icon:'🔔',label:'Terminy'},{id:'stats',icon:'📊',label:'Statystyki'},{id:'offers',icon:'📋',label:'Oferty'}
+  ];
+  ['home','contacts','reminders','offers'].forEach(s=>{
+    const el=document.getElementById('bnav-'+s);if(!el)return;
+    el.innerHTML=items.map(n=>n.fab?
+      `<div class="fab-wrap"><button class="fab" onclick="openSheet('sh-offer')">📄</button><span style="font-size:9px;color:var(--muted)">Oferta</span></div>`:
+      `<button class="nb${active===n.id?' active':''}" onclick="showScreen('${n.id}')"><span>${n.icon}</span>${n.label}</button>`
+    ).join('');
+  });
 }
 
-// ===== SHEETS =====
 function openSheet(id){
-  if(id==='sheet-reminder'){
-    document.getElementById('r-contact').innerHTML='<option value="">— ogólne —</option>'+contacts.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
-  }
-  if(id==='sheet-offer-gen'){
-    document.getElementById('o-contact').innerHTML='<option value="">— wybierz lub wpisz ręcznie —</option>'+contacts.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
-    const today=new Date().toISOString().slice(0,10);
-    document.getElementById('o-date').value=today;
+  if(id==='sh-reminder'){document.getElementById('r-cid').innerHTML='<option value="">— ogólne —</option>'+contacts.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');}
+  if(id==='sh-offer'){document.getElementById('o-cid').innerHTML='<option value="">— wybierz lub wpisz ręcznie —</option>'+contacts.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');document.getElementById('o-date').value=todayStr();resetOffer();}
+  if(id==='sh-voice'){
+    document.getElementById('v-cid').innerHTML='<option value="">— bez kontaktu —</option>'+contacts.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+    document.getElementById('tbox').textContent='Tutaj pojawi się transkrypcja...';
+    document.getElementById('ai-area').innerHTML='';document.getElementById('v-actions').innerHTML='';
+    document.getElementById('rec-time').textContent='0:00';document.getElementById('rec-lbl').textContent='Kliknij aby nagrać';
+    document.getElementById('rec-btn').className='rec-btn';buildWave();
   }
   document.getElementById(id).classList.add('open');
 }
 function closeSheet(id){document.getElementById(id).classList.remove('open');}
-function overlayClick(e,id){if(e.target===e.currentTarget)closeSheet(id);}
+function ovc(e,id){if(e.target===e.currentTarget)closeSheet(id);}
 
-// ===== HELPERS =====
 function todayStr(){return new Date().toISOString().slice(0,10);}
 function fmtDate(d){if(!d)return'—';return new Date(d+'T12:00:00').toLocaleDateString('pl-PL',{day:'2-digit',month:'2-digit',year:'numeric'});}
 function initials(n){return n.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();}
-function addDays(dateStr,days){
-  const d=new Date(dateStr+'T12:00:00');
-  d.setDate(d.getDate()+days);
-  return d.toLocaleDateString('pl-PL',{day:'2-digit',month:'2-digit',year:'numeric'});
-}
+function fmt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,' ');}
+function pl(t){return String(t).replace(/ą/g,'a').replace(/Ą/g,'A').replace(/ć/g,'c').replace(/Ć/g,'C').replace(/ę/g,'e').replace(/Ę/g,'E').replace(/ł/g,'l').replace(/Ł/g,'L').replace(/ń/g,'n').replace(/Ń/g,'N').replace(/ó/g,'o').replace(/Ó/g,'O').replace(/ś/g,'s').replace(/Ś/g,'S').replace(/ź/g,'z').replace(/Ź/g,'Z').replace(/ż/g,'z').replace(/Ż/g,'Z').replace(/[^\x00-\x7F]/g,'?');}
 
-// ===== RENDER HOME =====
 function renderHome(){
-  document.getElementById('today-label').textContent=new Date().toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'});
+  document.getElementById('today-lbl').textContent=new Date().toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'});
   const acc=contacts.filter(c=>c.status==='accepted').length;
   const sent=contacts.filter(c=>c.status==='sent').length;
   const rev=contacts.filter(c=>c.status==='accepted').reduce((a,c)=>a+(c.value||0),0);
   document.getElementById('stats-home').innerHTML=`
-    <div class="stat"><div class="stat-label">Kontakty</div><div class="stat-val">${contacts.length}</div></div>
-    <div class="stat"><div class="stat-label">Zaakceptowane</div><div class="stat-val" style="color:#3B6D11">${acc}</div></div>
-    <div class="stat"><div class="stat-label">Wysłane oferty</div><div class="stat-val" style="color:#854F0B">${sent}</div></div>
-    <div class="stat"><div class="stat-label">Przychód</div><div class="stat-val" style="color:var(--or-d);font-size:16px">${rev.toLocaleString('pl')} zł</div></div>`;
+    <div class="sc"><div class="sc-l">Kontakty</div><div class="sc-v">${contacts.length}</div></div>
+    <div class="sc"><div class="sc-l">Zaakceptowane</div><div class="sc-v" style="color:#3B6D11">${acc}</div></div>
+    <div class="sc"><div class="sc-l">Wysłane oferty</div><div class="sc-v" style="color:#854F0B">${sent}</div></div>
+    <div class="sc"><div class="sc-l">Przychód</div><div class="sc-v" style="color:var(--or-d);font-size:16px">${fmt(rev)} zł</div></div>`;
   document.getElementById('funnel-home').innerHTML=STEPS.map((s,i)=>{
     const cnt=contacts.filter(c=>c.status===s).length;
     const pct=contacts.length?Math.round(cnt/contacts.length*100):0;
-    return`<div class="funnel-row"><div class="funnel-label">${SLB[i]}</div><div class="funnel-bar"><div class="funnel-fill" style="width:${pct}%"></div></div><div class="funnel-count">${cnt}</div></div>`;
+    return`<div class="fr-row"><div class="fr-label">${SLB[i]}</div><div class="fr-bar"><div class="fr-fill" style="width:${pct}%"></div></div><div class="fr-cnt">${cnt}</div></div>`;
   }).join('');
   const ts=todayStr();
   const due=reminders.filter(r=>!r.done&&r.date<=ts).slice(0,3);
-  document.getElementById('home-reminders').innerHTML=due.length?due.map(r=>{
+  document.getElementById('home-rems').innerHTML=due.length?due.map(r=>{
     const c=contacts.find(x=>x.id===r.cid);
-    return`<div class="rem-item overdue"><div class="dot ${RD[r.type]}"></div><div style="flex:1"><div style="font-size:13px;font-weight:600">${RT[r.type]} — ${c?c.name:'?'}</div><div style="font-size:12px;color:var(--muted)">${r.note}</div></div><button class="check-btn" onclick="toggleDone(${r.id})">✓</button></div>`;
+    return`<div class="rem over"><div class="dot ${RD[r.type]}"></div><div style="flex:1"><div style="font-size:13px;font-weight:600">${RT[r.type]} — ${c?c.name:'?'}</div><div style="font-size:12px;color:var(--muted)">${r.note}</div></div><button class="ckb" onclick="toggleDone(${r.id})">✓</button></div>`;
   }).join(''):`<div style="font-size:13px;color:var(--muted);padding:6px 0 10px">Brak zaległych terminów 🎉</div>`;
   document.getElementById('home-contacts').innerHTML=contacts.slice(-4).reverse().map(c=>`
     <div class="card" onclick="openDetail(${c.id})">
-      <div class="card-head">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div class="avatar">${initials(c.name)}</div>
-          <div><div class="card-name">${c.name}</div><div class="card-meta">${c.city||'—'} · ${c.product}</div></div>
-        </div>
-        <span class="badge ${SC[c.status]}">${SL[c.status]}</span>
-      </div>
+      <div class="ch"><div style="display:flex;align-items:center;gap:10px"><div class="av">${initials(c.name)}</div><div><div class="cn">${c.name}</div><div class="cm">${c.city||'—'} · ${c.product}</div></div></div>
+      <span class="bdg ${SC[c.status]}">${SL[c.status]}</span></div>
     </div>`).join('');
 }
 
-// ===== CONTACTS =====
 function renderContacts(){
   const chips=['all','new','meeting','sent','accepted','rejected'];
   const cl={all:'Wszyscy',new:'Nowe',meeting:'Spotkanie',sent:'Wysłane',accepted:'Zaakceptowane',rejected:'Odrzucone'};
-  document.getElementById('contacts-chips').innerHTML=chips.map(c=>`<button class="chip${cFilter===c?' active':''}" onclick="setCF('${c}')">${cl[c]}</button>`).join('');
-  const q=(document.getElementById('contacts-search')||{value:''}).value.toLowerCase();
+  document.getElementById('c-chips').innerHTML=chips.map(c=>`<button class="chip${cFilter===c?' active':''}" onclick="setCF('${c}')">${cl[c]}</button>`).join('');
+  const q=(document.getElementById('c-search')||{value:''}).value.toLowerCase();
   const list=contacts.filter(c=>{
     if(q&&!c.name.toLowerCase().includes(q)&&!(c.city||'').toLowerCase().includes(q))return false;
     return cFilter==='all'||c.status===cFilter;
   });
-  document.getElementById('contacts-list').innerHTML=list.length?list.map(c=>`
+  document.getElementById('c-list').innerHTML=list.length?list.map(c=>`
     <div class="card" onclick="openDetail(${c.id})">
-      <div class="card-head">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div class="avatar">${initials(c.name)}</div>
-          <div><div class="card-name">${c.name}</div><div class="card-meta">${c.city||'—'} · ${c.product}</div></div>
+      <div class="ch">
+        <div style="display:flex;align-items:center;gap:10px"><div class="av">${initials(c.name)}</div><div><div class="cn">${c.name}</div><div class="cm">${c.city||'—'} · ${c.product}</div></div></div>
+        <div style="display:flex;align-items:center;gap:5px">
+          <span class="bdg ${SC[c.status]}">${SL[c.status]}</span>
+          <button onclick="event.stopPropagation();openWA(${c.id})" style="font-size:18px;background:none;border:none;cursor:pointer" title="WhatsApp">💬</button>
+          <button onclick="event.stopPropagation();deleteContact(${c.id})" style="font-size:16px;background:none;border:none;cursor:pointer;color:var(--re)" title="Usuń">🗑</button>
         </div>
-        <span class="badge ${SC[c.status]}">${SL[c.status]}</span>
       </div>
-      ${c.value?`<div style="font-size:12px;color:var(--or-d);font-weight:600;margin-top:6px">${c.value.toLocaleString('pl')} zł</div>`:''}
-    </div>`).join(''):`<div class="empty-state">Brak kontaktów</div>`;
+      ${c.value?`<div style="font-size:12px;color:var(--or-d);font-weight:600;margin-top:5px">${fmt(c.value)} zł</div>`:''}
+    </div>`).join(''):`<div class="empty">Brak kontaktów</div>`;
 }
 function setCF(f){cFilter=f;renderContacts();}
+function deleteContact(id){
+  if(!confirm('Usunąć kontakt? Zostaną też usunięte powiązane terminy.'))return;
+  contacts=contacts.filter(c=>c.id!==id);reminders=reminders.filter(r=>r.cid!==id);
+  renderContacts();renderHome();
+}
 
-// ===== REMINDERS =====
 function renderReminders(){
   const chips=['all','meeting','offer','follow'];
   const cl={all:'Wszystkie',meeting:'Spotkania',offer:'Oferty',follow:'Follow-up'};
-  document.getElementById('rem-chips').innerHTML=chips.map(c=>`<button class="chip${rFilter===c?' active':''}" onclick="setRF('${c}')">${cl[c]}</button>`).join('');
+  document.getElementById('r-chips').innerHTML=chips.map(c=>`<button class="chip${rFilter===c?' active':''}" onclick="setRF('${c}')">${cl[c]}</button>`).join('');
   const ts=todayStr();
   const list=reminders.filter(r=>rFilter==='all'||r.type===rFilter).sort((a,b)=>new Date(a.date)-new Date(b.date));
-  document.getElementById('reminders-list').innerHTML=list.length?list.map(r=>{
+  document.getElementById('r-list').innerHTML=list.length?list.map(r=>{
     const c=contacts.find(x=>x.id===r.cid);
     const over=r.date<ts&&!r.done;
-    return`<div class="rem-item${over?' overdue':''}" style="${r.done?'opacity:0.45':''}">
+    return`<div class="rem${over?' over':''}" style="${r.done?'opacity:.45':''}">
       <div class="dot ${RD[r.type]}"></div>
-      <div style="flex:1">
-        <div style="font-size:13px;font-weight:600">${RT[r.type]}</div>
-        <div style="font-size:12px;color:var(--muted)">${c?c.name:'—'} · ${r.note}</div>
-        <div style="font-size:11px;color:var(--light);margin-top:2px">${fmtDate(r.date)}</div>
-      </div>
-      <button class="check-btn" onclick="toggleDone(${r.id})">✓</button>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${RT[r.type]}</div><div style="font-size:12px;color:var(--muted)">${c?c.name:'—'} · ${r.note}</div><div style="font-size:11px;color:var(--light);margin-top:2px">${fmtDate(r.date)}</div></div>
+      <button class="ckb" onclick="toggleDone(${r.id})">✓</button>
+      <button class="del-btn" onclick="deleteReminder(${r.id})">🗑</button>
     </div>`;
-  }).join(''):`<div class="empty-state">Brak terminów</div>`;
+  }).join(''):`<div class="empty">Brak terminów</div>`;
 }
 function setRF(f){rFilter=f;renderReminders();}
-function toggleDone(id){const r=reminders.find(x=>x.id===id);if(r)r.done=!r.done;const s=getCurrentScreen();if(s==='home')renderHome();if(s==='reminders')renderReminders();}
+function toggleDone(id){const r=reminders.find(x=>x.id===id);if(r)r.done=!r.done;const s=getCur();if(s==='home')renderHome();if(s==='reminders')renderReminders();}
+function deleteReminder(id){if(!confirm('Usunąć termin?'))return;reminders=reminders.filter(r=>r.id!==id);renderReminders();}
 
-// ===== OFFERS =====
 function renderOffers(){
-  document.getElementById('offers-list').innerHTML=generatedOffers.length?
-    generatedOffers.map((o,i)=>`<div class="card">
-      <div class="card-head">
-        <div><div class="card-name">${o.name}</div><div class="card-meta">${o.address||'—'} · ${fmtDate(o.date)}</div></div>
-        <span class="badge s-sent">PDF</span>
-      </div>
-      <div style="font-size:12px;color:var(--muted);margin-top:6px">${o.scope} · ${o.area}m²</div>
-      <button style="margin-top:8px;padding:8px 14px;background:var(--or);color:#fff;border:none;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer" onclick="dlOffer(${i})">⬇ Pobierz PDF</button>
-    </div>`).join(''):`<div class="empty-state">Brak wygenerowanych ofert.<br>Użyj przycisku 📄 aby wygenerować pierwszą.</div>`;
+  document.getElementById('o-list').innerHTML=genOffers.length?
+    genOffers.map((o,i)=>`<div class="card">
+      <div class="ch"><div><div class="cn">${o.name}</div><div class="cm">${o.address||'—'} · ${fmtDate(o.date)}</div></div>
+      <div style="display:flex;gap:5px"><span class="bdg s-sent">PDF</span><button onclick="delOffer(${i})" style="font-size:16px;background:none;border:none;cursor:pointer;color:var(--re)">🗑</button></div></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:5px">${o.scope} · ${o.area}m²</div>
+      <button style="margin-top:8px;padding:8px 14px;background:var(--or);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer" onclick="dlOffer(${i})">⬇ Pobierz PDF</button>
+    </div>`).join(''):`<div class="empty">Brak wygenerowanych ofert</div>`;
 }
-function dlOffer(i){const o=generatedOffers[i];if(o){const a=document.createElement('a');a.href=o.url;a.download=o.filename;a.click();}}
+function dlOffer(i){const o=genOffers[i];if(o){const a=document.createElement('a');a.href=o.url;a.download=o.filename;a.click();}}
+function delOffer(i){if(!confirm('Usunąć ofertę?'))return;genOffers.splice(i,1);renderOffers();}
 
-// ===== DETAIL =====
+function renderCalendar(){
+  document.getElementById('cal-title').textContent=MONTHS[calMonth]+' '+calYear;
+  const first=new Date(calYear,calMonth,1);
+  let dow=first.getDay();if(dow===0)dow=7;
+  const days=new Date(calYear,calMonth+1,0).getDate();
+  const today=new Date();
+  let html='';
+  for(let i=1;i<dow;i++)html+=`<div></div>`;
+  for(let d=1;d<=days;d++){
+    const ds=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dr=reminders.filter(r=>r.date===ds&&!r.done);
+    const isToday=today.getFullYear()===calYear&&today.getMonth()===calMonth&&today.getDate()===d;
+    html+=`<div class="cal-day${isToday?' today':''}${dr.length?' has-ev':''}">
+      <div class="cal-dd">${d}</div>
+      ${dr.slice(0,2).map(r=>`<div class="cal-ev ${r.type==='meeting'?'meet':r.type==='follow'?'follow':''}">${RT[r.type].slice(0,3)}</div>`).join('')}
+    </div>`;
+  }
+  document.getElementById('cal-grid').innerHTML=html;
+  const ms=`${calYear}-${String(calMonth+1).padStart(2,'0')}`;
+  const mr=reminders.filter(r=>r.date.startsWith(ms)).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  document.getElementById('cal-list').innerHTML=mr.length?mr.map(r=>{
+    const c=contacts.find(x=>x.id===r.cid);
+    const over=r.date<todayStr()&&!r.done;
+    return`<div class="rem${over?' over':''}" style="${r.done?'opacity:.45':''}">
+      <div class="dot ${RD[r.type]}"></div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${fmtDate(r.date)} — ${RT[r.type]}</div><div style="font-size:12px;color:var(--muted)">${c?c.name:'—'} · ${r.note}</div></div>
+      <button class="ckb" onclick="toggleDone(${r.id});renderCalendar()">✓</button>
+    </div>`;
+  }).join(''):`<div class="empty">Brak terminów w tym miesiącu</div>`;
+}
+function calPrev(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
+function calNext(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();}
+
+function renderStats(){
+  const now=new Date();
+  const months=[];
+  for(let i=5;i>=0;i--){
+    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const label=MONTHS[d.getMonth()].slice(0,3);
+    const rev=contacts.filter(c=>c.status==='accepted'&&(c.added||'').startsWith(key)).reduce((a,c)=>a+(c.value||0),0);
+    months.push({label,rev,isCur:i===0});
+  }
+  const maxRev=Math.max(...months.map(m=>m.rev),1);
+  const totalRev=contacts.filter(c=>c.status==='accepted').reduce((a,c)=>a+(c.value||0),0);
+  const totalAcc=contacts.filter(c=>c.status==='accepted').length;
+  const convRate=contacts.length?Math.round(totalAcc/contacts.length*100):0;
+  const avgVal=totalAcc?Math.round(totalRev/totalAcc):0;
+  document.getElementById('stats-content').innerHTML=`
+    <div class="st">Przychód ostatnie 6 miesięcy</div>
+    <div class="sc" style="margin-bottom:14px">
+      <div class="bar-chart">${months.map(m=>`
+        <div class="bar-wrap">
+          <div class="bar-val">${m.rev?fmt(Math.round(m.rev/1000))+'k':''}</div>
+          <div class="bar${m.isCur?' cur':''}" style="height:${Math.round(m.rev/maxRev*60)+4}px"></div>
+          <div class="bar-lbl">${m.label}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="sg">
+      <div class="sc"><div class="sc-l">Łączny przychód</div><div class="sc-v" style="color:var(--or-d);font-size:16px">${fmt(totalRev)} zł</div></div>
+      <div class="sc"><div class="sc-l">Skuteczność</div><div class="sc-v" style="color:var(--gr)">${convRate}%</div></div>
+      <div class="sc"><div class="sc-l">Średnia wartość</div><div class="sc-v" style="color:var(--bl);font-size:15px">${fmt(avgVal)} zł</div></div>
+      <div class="sc"><div class="sc-l">Wygenerowane oferty</div><div class="sc-v">${genOffers.length}</div></div>
+    </div>
+    <div class="st">Status kontaktów</div>
+    ${STEPS.map((s,i)=>{const cnt=contacts.filter(c=>c.status===s).length;const pct=contacts.length?Math.round(cnt/contacts.length*100):0;return`<div class="fr-row"><div class="fr-label">${SLB[i]}</div><div class="fr-bar"><div class="fr-fill" style="width:${pct}%"></div></div><div class="fr-cnt">${cnt}</div></div>`;}).join('')}
+    <div class="dvdr"></div>
+    <div class="st">Produkt</div>
+    ${['piana PUR','celuloza','oba'].map(p=>{const cnt=contacts.filter(c=>c.product===p).length;const pct=contacts.length?Math.round(cnt/contacts.length*100):0;return`<div class="fr-row"><div class="fr-label">${p}</div><div class="fr-bar"><div class="fr-fill" style="width:${pct}%"></div></div><div class="fr-cnt">${cnt}</div></div>`;}).join('')}
+  `;
+}
+
 function openDetail(id){
-  prevScreen=getCurrentScreen();detailId=id;
+  prevScreen=getCur();detailId=id;
   const c=contacts.find(x=>x.id===id);if(!c)return;
-  document.getElementById('detail-title').textContent=c.name;
+  document.getElementById('det-title').textContent=c.name;
   const cRems=reminders.filter(r=>r.cid===id);
-  document.getElementById('detail-content').innerHTML=`
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-      <div class="avatar" style="width:50px;height:50px;font-size:16px">${initials(c.name)}</div>
-      <div><div style="font-size:17px;font-weight:700">${c.name}</div><div style="font-size:13px;color:var(--muted)">${c.city||'—'} · ${c.product}</div></div>
+  const photos=c.photos||[];
+  const voiceNotes=c.notes_voice||[];
+  const history=c.history||[];
+  document.getElementById('det-content').innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="av" style="width:48px;height:48px;font-size:16px">${initials(c.name)}</div>
+        <div><div style="font-size:17px;font-weight:700">${c.name}</div><div style="font-size:13px;color:var(--muted)">${c.city||'—'} · ${c.product}</div></div>
+      </div>
+      <div style="display:flex;gap:5px">
+        <button onclick="openWA(${id})" class="tb-btn" title="WhatsApp">💬</button>
+        <button onclick="deleteContactFromDetail(${id})" class="tb-btn" style="color:var(--re)" title="Usuń">🗑</button>
+      </div>
     </div>
-    <div class="section-title">Status oferty</div>
+    <div class="st">Status oferty</div>
     <div class="stepper">${STEPS.map((s,i)=>`<div class="step${s===c.status?' active':STEPS.indexOf(c.status)>i?' done':''}" onclick="setStatus(${id},'${s}')">${SLB[i]}</div>`).join('')}</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
-      <div class="detail-field"><div class="detail-field-label">Telefon</div><div class="detail-field-val">${c.phone||'—'}</div></div>
-      <div class="detail-field"><div class="detail-field-label">Wartość</div><div class="detail-field-val" style="color:var(--or-d)">${c.value?c.value.toLocaleString('pl')+' zł':'—'}</div></div>
-      <div class="detail-field"><div class="detail-field-label">Adres</div><div class="detail-field-val">${c.address||'—'}</div></div>
-      <div class="detail-field"><div class="detail-field-label">Email</div><div class="detail-field-val" style="font-size:11px">${c.email||'—'}</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px">
+      <div class="df-field"><div class="df-label">Telefon</div><div class="df-val">${c.phone||'—'}</div></div>
+      <div class="df-field"><div class="df-label">Wartość</div><div class="df-val" style="color:var(--or-d)">${c.value?fmt(c.value)+' zł':'—'}</div></div>
+      <div class="df-field"><div class="df-label">Adres</div><div class="df-val">${c.address||'—'}</div></div>
+      <div class="df-field"><div class="df-label">Email</div><div class="df-val" style="font-size:11px">${c.email||'—'}</div></div>
     </div>
-    <div class="detail-field" style="margin-bottom:14px"><div class="detail-field-label">Uwagi</div><div class="detail-field-val" style="font-weight:400;font-size:13px">${c.notes||'—'}</div></div>
-    <div class="section-title">Terminy (${cRems.length})</div>
-    ${cRems.map(r=>`<div class="rem-item" style="margin-bottom:6px${r.done?';opacity:0.45':''}">
+    <div class="df-field" style="margin-bottom:12px"><div class="df-label">Uwagi</div><div class="df-val" style="font-weight:400;font-size:13px">${c.notes||'—'}</div></div>
+
+    <div class="st">Zdjęcia z budowy (${photos.length})</div>
+    <div class="photos-grid">
+      ${photos.map((p,pi)=>`<div class="photo-thumb"><img src="${p}"><button class="photo-del" onclick="delPhoto(${id},${pi})">×</button></div>`).join('')}
+      <div class="photo-thumb add-photo" onclick="document.getElementById('pi-${id}').click()">📷</div>
+    </div>
+    <input type="file" id="pi-${id}" accept="image/*" style="display:none" onchange="handlePhoto(${id},this)">
+
+    <div class="st">Terminy (${cRems.length})</div>
+    ${cRems.map(r=>`<div class="rem" style="margin-bottom:6px${r.done?';opacity:.45':''}">
       <div class="dot ${RD[r.type]}"></div>
       <div style="flex:1"><div style="font-size:13px;font-weight:600">${RT[r.type]}</div><div style="font-size:12px;color:var(--muted)">${r.note} · ${fmtDate(r.date)}</div></div>
-      <button class="check-btn" onclick="toggleDoneD(${r.id})">✓</button>
+      <button class="ckb" onclick="toggleDoneD(${r.id})">✓</button>
+      <button class="del-btn" onclick="deleteReminderD(${r.id})">🗑</button>
     </div>`).join('')}
-    <button style="width:100%;padding:10px;background:none;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;cursor:pointer;margin-top:6px" onclick="openReminderD(${id})">+ Dodaj termin</button>
+    <button style="width:100%;padding:9px;background:none;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;cursor:pointer;margin-bottom:12px" onclick="openReminderD(${id})">+ Dodaj termin</button>
+
+    <div class="st">Notatki głosowe (${voiceNotes.length})</div>
+    ${voiceNotes.map((n,ni)=>`<div class="note-card">
+      <div class="note-meta"><div style="font-size:12px;font-weight:600">${fmtDate(n.date)} · ${n.duration}</div><button onclick="delVoiceNote(${id},${ni})" style="background:none;border:none;cursor:pointer;color:var(--re);font-size:14px">🗑</button></div>
+      <div style="font-size:13px;line-height:1.4">${n.transcript}</div>
+      ${n.summary?`<div class="note-ai">✨ ${n.summary}</div>`:''}
+    </div>`).join('')}
+    <button style="width:100%;padding:9px;background:none;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;cursor:pointer;margin-bottom:12px" onclick="openVoiceForDetail()">+ Dodaj notatkę głosową</button>
+
+    <div class="st">Historia statusów</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:12px">
+      ${history.map(h=>`<div class="hist-item">
+        <div class="hist-dot"></div>
+        <div class="hist-txt"><span class="bdg ${SC[h.status]}">${SL[h.status]}</span></div>
+        <div class="hist-date">${fmtDate(h.date)}</div>
+      </div>`).join('')}
+    </div>
   `;
   showScreen('detail');
 }
-function toggleDoneD(rid){const r=reminders.find(x=>x.id===rid);if(r)r.done=!r.done;openDetail(detailId);}
-function setStatus(id,s){const c=contacts.find(x=>x.id===id);if(c){c.status=s;openDetail(id);}}
-function openOfferForDetail(){
-  openSheet('sheet-offer-gen');
-  setTimeout(()=>{
-    const c=contacts.find(x=>x.id===detailId);
-    if(c){document.getElementById('o-contact').value=c.id;fillFromContact();}
-  },100);
-}
-function openReminderD(cid){openSheet('sheet-reminder');setTimeout(()=>{document.getElementById('r-contact').value=cid;},100);}
 
-// ===== SAVE CONTACT =====
+function deleteContactFromDetail(id){if(!confirm('Usunąć kontakt?'))return;contacts=contacts.filter(c=>c.id!==id);reminders=reminders.filter(r=>r.cid!==id);showScreen(prevScreen);}
+function toggleDoneD(rid){const r=reminders.find(x=>x.id===rid);if(r)r.done=!r.done;openDetail(detailId);}
+function deleteReminderD(rid){if(!confirm('Usunąć termin?'))return;reminders=reminders.filter(r=>r.id!==rid);openDetail(detailId);}
+function setStatus(id,s){const c=contacts.find(x=>x.id===id);if(c){c.status=s;if(!c.history)c.history=[];c.history.push({status:s,date:todayStr()});openDetail(id);}}
+function openOfferForDetail(){openSheet('sh-offer');setTimeout(()=>{const c=contacts.find(x=>x.id===detailId);if(c){document.getElementById('o-cid').value=c.id;fillFromC();}},100);}
+function openReminderD(cid){openSheet('sh-reminder');setTimeout(()=>{document.getElementById('r-cid').value=cid;},100);}
+function openVoiceForDetail(){openSheet('sh-voice');setTimeout(()=>{document.getElementById('v-cid').value=detailId||'';},100);}
+
+function addPhoto(id){document.getElementById('pi-'+id).click();}
+function handlePhoto(id,input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{const c=contacts.find(x=>x.id===id);if(c){if(!c.photos)c.photos=[];c.photos.push(e.target.result);openDetail(id);}};
+  reader.readAsDataURL(file);
+}
+function delPhoto(id,pi){if(!confirm('Usunąć zdjęcie?'))return;const c=contacts.find(x=>x.id===id);if(c&&c.photos){c.photos.splice(pi,1);openDetail(id);}}
+
+function openWA(id){
+  const c=contacts.find(x=>x.id===id);if(!c)return;
+  const phone=c.phone.replace(/\D/g,'');
+  const templates=[
+    {name:'Potwierdzenie spotkania',text:`Dzień dobry ${c.name},\n\nPotwierdzam nasze spotkanie w sprawie wyceny ocieplenia. Do zobaczenia!\n\nDaniel\nBudivo — Skuteczne Izolacje Termiczne\n📞 888 172 220`},
+    {name:'Oferta wysłana',text:`Dzień dobry ${c.name},\n\nW załączniku przesyłam ofertę izolacji pianą PUR. Oferta ważna 14 dni. Zapraszam do kontaktu w razie pytań.\n\nDaniel\nBudivo\n📞 888 172 220`},
+    {name:'Follow-up po wycenie',text:`Dzień dobry ${c.name},\n\nChciałem zapytać czy miał/a Pan/Pani okazję zapoznać się z naszą ofertą? Chętnie odpowiem na wszelkie pytania.\n\nDaniel\nBudivo\n📞 888 172 220`},
+    {name:'Prośba o opinię Google',text:`Dzień dobry ${c.name},\n\nDziękuję za zaufanie i wybór Budivo! Jeśli jest Pan/Pani zadowolony/a z realizacji, będę bardzo wdzięczny za wystawienie opinii w Google 🙏\n\nDaniel\nBudivo`},
+    {name:'Przypomnienie o terminie',text:`Dzień dobry ${c.name},\n\nPrzypominam o jutrzejszym spotkaniu w sprawie ocieplenia. Do zobaczenia!\n\nDaniel\nBudivo\n📞 888 172 220`},
+  ];
+  document.getElementById('wa-templates').innerHTML=templates.map((t,i)=>`
+    <div class="wa-tpl">
+      <div class="wa-tpl-name">${t.name}</div>
+      <div class="wa-tpl-text">${t.text.replace(/\n/g,'<br>')}</div>
+      <button class="wa-btn" onclick="sendWA('${phone}',${i})">💬 Otwórz WhatsApp</button>
+    </div>`).join('');
+  window._waTpls=templates;
+  openSheet('sh-whatsapp');
+}
+function sendWA(phone,i){const text=encodeURIComponent(window._waTpls[i].text);const url=phone?`https://wa.me/48${phone}?text=${text}`:`https://wa.me/?text=${text}`;window.open(url,'_blank');}
+
+function buildWave(){const w=document.getElementById('wave');w.innerHTML='';for(let i=0;i<26;i++){const b=document.createElement('div');b.className='wb';b.id='wb'+i;b.style.height='3px';w.appendChild(b);}}
+function toggleRec(){if(!isRec)startRec();else stopRec();}
+function startRec(){
+  isRec=true;recSecs=0;
+  document.getElementById('rec-btn').className='rec-btn rec pulse';
+  document.getElementById('rec-btn').textContent='⏹';
+  document.getElementById('rec-lbl').textContent='Nagrywanie...';
+  recInt=setInterval(()=>{recSecs++;const m=Math.floor(recSecs/60);const s=recSecs%60;document.getElementById('rec-time').textContent=m+':'+(s<10?'0':'')+s;},1000);
+  wvInt=setInterval(()=>{for(let i=0;i<26;i++){const el=document.getElementById('wb'+i);if(el)el.style.height=Math.max(3,Math.floor(Math.random()*20))+'px';}},120);
+}
+function stopRec(){
+  if(!isRec)return;
+  isRec=false;clearInterval(recInt);clearInterval(wvInt);
+  document.getElementById('rec-btn').className='rec-btn';document.getElementById('rec-btn').textContent='🎤';
+  document.getElementById('rec-lbl').textContent='Nagrano '+document.getElementById('rec-time').textContent;
+  for(let i=0;i<26;i++){const el=document.getElementById('wb'+i);if(el)el.style.height='3px';}
+  simulateTranscript();
+}
+const DEMOS=[
+  {t:'Bylem dzis u Kowalskich. Chca ocieplic poddasze okolo 90 metrow. Piana PUR. Maja budzet do 10 tys. Dadza znac w przyszlym tygodniu.',s:'Klient: Kowalscy, poddasze 90m2, piana PUR, budzet 10k. Follow-up za tydzien.'},
+  {t:'Zadzwonil Pan z Lancuta w sprawie hali magazynowej. 600 metrow, dach i sciany. Prosi o kontakt do konca tygodnia. Firma budowlana.',s:'Nowy lead: hala 600m2 Lancut, dach+sciany. Pilne - oddzwonic do piatku.'},
+  {t:'Spotkanie z klientem. Zainteresowany wariantem EXY 09. Pyta o mozliwosc rozlozenia platnosci na dwie czesci. Chce oferte.',s:'Klient zainteresowany EXY 09, pyta o raty. Wyslac oferte.'},
+];
+function simulateTranscript(){
+  const tb=document.getElementById('tbox');tb.textContent='Przetwarzam nagranie...';
+  setTimeout(()=>{
+    const demo=DEMOS[Math.floor(Math.random()*DEMOS.length)];
+    tb.textContent=demo.t;
+    document.getElementById('ai-area').innerHTML=`<div style="font-size:12px;color:var(--muted);margin:6px 0 4px;display:flex;align-items:center;gap:5px"><div class="spin" style="width:14px;height:14px;border-width:2px;margin:0"></div> AI analizuje...</div>`;
+    setTimeout(()=>{
+      document.getElementById('ai-area').innerHTML=`<div class="ai-box"><div class="ai-lbl">✨ Streszczenie AI</div><div class="ai-txt">${demo.s}</div></div>`;
+      const m=Math.floor(recSecs/60);const s=recSecs%60;const dur=m+':'+(s<10?'0':'')+s;
+      document.getElementById('v-actions').innerHTML=`<button class="bp" style="margin-top:10px" onclick="saveVoiceNote('${demo.t}','${demo.s}','${dur}')">💾 Zapisz notatkę</button>`;
+    },1800);
+  },900);
+}
+function saveVoiceNote(transcript,summary,dur){
+  const cid=parseInt(document.getElementById('v-cid').value)||null;
+  const note={date:todayStr(),duration:dur||'0:30',transcript,summary};
+  if(cid){const c=contacts.find(x=>x.id===cid);if(c){if(!c.notes_voice)c.notes_voice=[];c.notes_voice.push(note);}}
+  closeSheet('sh-voice');
+  if(getCur()==='detail')openDetail(detailId);
+}
+function delVoiceNote(cid,ni){if(!confirm('Usunąć notatkę?'))return;const c=contacts.find(x=>x.id===cid);if(c&&c.notes_voice){c.notes_voice.splice(ni,1);openDetail(cid);}}
+
 function saveContact(){
   const name=document.getElementById('c-name').value.trim();if(!name)return;
-  const c={id:nextId++,name,phone:document.getElementById('c-phone').value,email:document.getElementById('c-email').value,city:document.getElementById('c-city').value,address:document.getElementById('c-address').value,product:document.getElementById('c-product').value,status:'new',value:parseInt(document.getElementById('c-value').value)||0,notes:document.getElementById('c-notes').value,added:todayStr()};
+  const c={id:nextId++,name,phone:document.getElementById('c-phone').value,email:document.getElementById('c-email').value,city:document.getElementById('c-city').value,address:document.getElementById('c-addr').value,product:document.getElementById('c-prod').value,status:'new',value:parseInt(document.getElementById('c-val').value)||0,notes:document.getElementById('c-notes').value,added:todayStr(),history:[{status:'new',date:todayStr()}],photos:[],notes_voice:[]};
   contacts.push(c);
   const rt=document.getElementById('c-rtype').value,rd=document.getElementById('c-rdate').value;
   if(rt&&rd)reminders.push({id:nextRid++,cid:c.id,type:rt,date:rd,note:c.notes||RT[rt],done:false});
-  closeSheet('sheet-contact');
-  ['c-name','c-phone','c-email','c-city','c-address','c-value','c-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  const s=getCurrentScreen();if(s==='home')renderHome();if(s==='contacts')renderContacts();
+  closeSheet('sh-contact');
+  ['c-name','c-phone','c-email','c-city','c-addr','c-val','c-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const s=getCur();if(s==='home')renderHome();if(s==='contacts')renderContacts();
 }
 
-// ===== SAVE REMINDER =====
 function saveReminder(){
   const d=document.getElementById('r-date').value;if(!d)return;
-  const cid=parseInt(document.getElementById('r-contact').value)||null;
+  const cid=parseInt(document.getElementById('r-cid').value)||null;
   reminders.push({id:nextRid++,cid,type:document.getElementById('r-type').value,date:d,note:document.getElementById('r-note').value,done:false});
-  closeSheet('sheet-reminder');
-  const s=getCurrentScreen();if(s==='home')renderHome();if(s==='reminders')renderReminders();
+  closeSheet('sh-reminder');
+  const s=getCur();if(s==='home')renderHome();if(s==='reminders')renderReminders();if(s==='calendar')renderCalendar();
 }
 
-// ===== FILL FROM CONTACT =====
-function fillFromContact(){
-  const cid=parseInt(document.getElementById('o-contact').value);if(!cid)return;
+function fillFromC(){
+  const cid=parseInt(document.getElementById('o-cid').value);if(!cid)return;
   const c=contacts.find(x=>x.id===cid);if(!c)return;
-  document.getElementById('o-name').value=c.name||'';
-  document.getElementById('o-phone').value=c.phone||'';
-  document.getElementById('o-email').value=c.email||'';
-  document.getElementById('o-address').value=c.address||c.city||'';
+  document.getElementById('o-name').value=c.name||'';document.getElementById('o-phone').value=c.phone||'';
+  document.getElementById('o-email').value=c.email||'';document.getElementById('o-addr').value=c.address||c.city||'';
 }
-
-// ===== GENERATOR OFERTY PDF =====
-// Używa pdf-lib do nakładania tekstu na szablon PDF z GitHub
 
 async function generateOffer(){
-  const name=document.getElementById('o-name').value.trim();
-  if(!name){alert('Wpisz imię i nazwisko klienta');return;}
-
-  const phone=document.getElementById('o-phone').value||'—';
-  const email=document.getElementById('o-email').value||'—';
-  const address=document.getElementById('o-address').value||'—';
-  const scope1=document.getElementById('o-scope1').value||'Ocieplenie połaci dachowej';
-  const area1=parseFloat(document.getElementById('o-area1').value)||0;
-  const thick1=parseFloat(document.getElementById('o-thick1').value)||0;
-  const scope2=document.getElementById('o-scope2').value||'';
-  const area2=parseFloat(document.getElementById('o-area2').value)||0;
-  const thick2=parseFloat(document.getElementById('o-thick2').value)||0;
-  const scope3=document.getElementById('o-scope3').value||'';
-  const area3=parseFloat(document.getElementById('o-area3').value)||0;
-  const thick3=parseFloat(document.getElementById('o-thick3').value)||0;
-  // Laczna powierzchnia do wyswietlenia
-  const totalArea=area1+area2+area3;
-  const scope=scope1;
-  const area=area1;
-  const thick=thick1;
-  const p08=parseInt(document.getElementById('o-p08').value)||9500;
-  const p09plus=parseInt(document.getElementById('o-p09plus').value)||0;
-  const p09=parseInt(document.getElementById('o-p09').value)||11500;
-  const p08b=Math.round(p08*1.08);
-  const p09b=Math.round(p09*1.08);
-  // vol obliczane per zakres
-  const offerDateInput=document.getElementById('o-date').value;
+  const name=document.getElementById('o-name').value.trim();if(!name){alert('Wpisz imię i nazwisko klienta');return;}
+  const phone=document.getElementById('o-phone').value||'—';const email=document.getElementById('o-email').value||'—';const address=document.getElementById('o-addr').value||'—';
+  const s1=document.getElementById('o-s1').value||'Ocieplenie polaci dachowej';const a1=parseFloat(document.getElementById('o-a1').value)||0;const t1=parseFloat(document.getElementById('o-t1').value)||0;
+  const s2=document.getElementById('o-s2').value||'';const a2=parseFloat(document.getElementById('o-a2').value)||0;const t2=parseFloat(document.getElementById('o-t2').value)||0;
+  const s3=document.getElementById('o-s3').value||'';const a3=parseFloat(document.getElementById('o-a3').value)||0;const t3=parseFloat(document.getElementById('o-t3').value)||0;
+  const totalArea=a1+a2+a3;
+  const p08=parseInt(document.getElementById('o-p08').value)||9500;const p09=parseInt(document.getElementById('o-p09').value)||11500;const p09p=parseInt(document.getElementById('o-p09p').value)||0;
+  const p08b=Math.round(p08*1.08);const p09b=Math.round(p09*1.08);
+  const od=document.getElementById('o-date').value;
   let offerDate,validUntil;
-  if(offerDateInput){
-    const dt=new Date(offerDateInput+'T12:00:00');
-    offerDate=dt.toLocaleDateString('pl-PL',{day:'2-digit',month:'2-digit',year:'numeric'});
-    const vd=new Date(dt);vd.setDate(vd.getDate()+14);
-    validUntil=vd.toLocaleDateString('pl-PL',{day:'2-digit',month:'2-digit',year:'numeric'});
-  } else {
-    const dt=new Date();
-    offerDate=dt.toLocaleDateString('pl-PL',{day:'2-digit',month:'2-digit',year:'numeric'});
-    const vd=new Date(dt);vd.setDate(vd.getDate()+14);
-    validUntil=vd.toLocaleDateString('pl-PL',{day:'2-digit',month:'2-digit',year:'numeric'});
-  }
-  const fmt=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+  if(od){const dt=new Date(od+'T12:00:00');offerDate=dt.toLocaleDateString('pl-PL',{day:'2-digit',month:'2-digit',year:'numeric'});const vd=new Date(dt);vd.setDate(vd.getDate()+14);validUntil=vd.toLocaleDateString('pl-PL',{day:'2-digit',month:'2-digit',year:'numeric'});}
+  else{const dt=new Date();offerDate=dt.toLocaleDateString('pl-PL',{day:'2-digit',month:'2-digit',year:'numeric'});const vd=new Date(dt);vd.setDate(vd.getDate()+14);validUntil=vd.toLocaleDateString('pl-PL',{day:'2-digit',month:'2-digit',year:'numeric'});}
 
-  // Pokaż progress
-  document.getElementById('offer-form').style.display='none';
-  document.getElementById('offer-progress').style.display='block';
-  document.getElementById('offer-result').style.display='none';
-  document.getElementById('offer-error').style.display='none';
+  document.getElementById('off-form').style.display='none';document.getElementById('off-prog').style.display='block';document.getElementById('off-result').style.display='none';document.getElementById('off-err').style.display='none';
+  const setSt=t=>{document.getElementById('off-status').textContent=t;};
 
-  const setStatus=t=>{document.getElementById('gen-status').textContent=t;};
+  try{
+    setSt('Wczytuję szablon oferty...');
+    const resp=await fetch('./szablon_oferty.pdf');
+    if(!resp.ok)throw new Error('Nie mozna wczytac szablonu. Sprawdz czy plik szablon_oferty.pdf jest wgrany na GitHub razem z index.html.');
+    const bytes=await resp.arrayBuffer();
+    setSt('Przetwarzam strony...');
+    const {PDFDocument,rgb,StandardFonts}=PDFLib;
+    const doc=await PDFDocument.load(bytes);
+    const pages=doc.getPages();
+    const WHITE=rgb(1,1,1),BLACK=rgb(.07,.09,.15),GRAY=rgb(.42,.45,.50),TEAL=rgb(.1137,.7216,.6),LIGHT=rgb(.65,.92,.87),AMBER=rgb(.57,.25,.05),AMBG=rgb(1,.953,.784);
+    const fR=await doc.embedFont(StandardFonts.Helvetica);const fB=await doc.embedFont(StandardFonts.HelveticaBold);
+    const H=841.9;const yy=top=>H-top;
+    function dr(page,x,top,w,h,pad=2,color=WHITE){page.drawRectangle({x:x-pad,y:yy(top)-h-pad,width:w+pad*2,height:h+pad*2+1,color});}
+    function dt(page,text,x,top,size,font,color=BLACK){page.drawText(pl(text),{x,y:yy(top),size,font,color});}
 
-  try {
-    setStatus('Wczytuję szablon oferty...');
-
-    // Pobierz szablon PDF z GitHub Pages (ten sam folder)
-    const templateUrl = './szablon_oferty.pdf';
-    const response = await fetch(templateUrl);
-    if(!response.ok) throw new Error('Nie można wczytać szablonu PDF. Sprawdź czy plik szablon_oferty.pdf jest wgrany na GitHub.');
-    const templateBytes = await response.arrayBuffer();
-
-    setStatus('Przetwarzam strony...');
-    const {PDFDocument, rgb, StandardFonts} = PDFLib;
-    const pdfDoc = await PDFDocument.load(templateBytes);
-    const pages = pdfDoc.getPages();
-
-    // Kolory
-    const WHITE  = rgb(1,1,1);
-    const BLACK  = rgb(0.07,0.09,0.15);
-    const GRAY   = rgb(0.42,0.45,0.50);
-    const TEAL   = rgb(0.1137,0.7216,0.6);
-    const LIGHT  = rgb(0.65,0.92,0.87);
-    const AMBER  = rgb(0.57,0.25,0.05);
-    const AMBER_BG = rgb(1.0,0.953,0.784);
-
-    const fontR = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const fontB = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-
-    const H=841.9;
-    const yy=top=>H-top;
-
-    // Funkcja rysowania prostokąta (przykrycie)
-    function drawRect(page,x,top,w,h,pad=2,color=WHITE){
-      page.drawRectangle({x:x-pad,y:yy(top)-h-pad,width:w+pad*2,height:h+pad*2+1,color});
-    }
-    function pl(text){
-      return String(text)
-        .replace(/ą/g,"a").replace(/Ą/g,"A")
-        .replace(/ć/g,"c").replace(/Ć/g,"C")
-        .replace(/ę/g,"e").replace(/Ę/g,"E")
-        .replace(/ł/g,"l").replace(/Ł/g,"L")
-        .replace(/ń/g,"n").replace(/Ń/g,"N")
-        .replace(/ó/g,"o").replace(/Ó/g,"O")
-        .replace(/ś/g,"s").replace(/Ś/g,"S")
-        .replace(/ź/g,"z").replace(/Ź/g,"Z")
-        .replace(/ż/g,"z").replace(/Ż/g,"Z")
-        .replace(/[^\x00-\x7F]/g,"?");
-    }
-    function drawText(page,text,x,top,size,font,color=BLACK){
-      page.drawText(pl(text),{x,y:yy(top),size,font,color});
-    }
-
-    setStatus('Wypełniam dane klienta...');
-
-    // === STRONA 1: dane klienta ===
+    setSt('Wypelniam dane klienta...');
     const p1=pages[0];
-    // Przykryj cały blok danych białym prostokątem
-    drawRect(p1,32,127,532,65,3,WHITE);
-    // Rząd 1
-    drawText(p1,'OFERTA PRZYGOTOWANA DLA',48,136,6.5,fontR,GRAY);
-    drawText(p1,name,48,148,10,fontB,BLACK);
-    drawText(p1,'ADRES INWESTYCJI',219.7,136,6.5,fontR,GRAY);
-    drawText(p1,address,219.7,148,10,fontB,BLACK);
-    drawText(p1,'DATA OFERTY',391.4,136,6.5,fontR,GRAY);
-    drawText(p1,offerDate,391.4,148,10,fontB,BLACK);
-    // Rząd 2
-    drawRect(p1,32,161,532,28,3,WHITE);
-    drawText(p1,'TELEFON',48,165,6.5,fontR,GRAY);
-    drawText(p1,phone,48,176,9,fontB,BLACK);
-    drawText(p1,'E-MAIL',219.7,165,6.5,fontR,GRAY);
-    drawText(p1,email,219.7,176,9,fontB,BLACK);
-    drawText(p1,'WAŻNOSC OFERTY',391.4,165,6.5,fontR,GRAY);
-    drawText(p1,`14 dni (do ${validUntil})`,391.4,176,9,fontB,BLACK);
+    dr(p1,32,127,532,65,3);dt(p1,'OFERTA PRZYGOTOWANA DLA',48,136,6.5,fR,GRAY);dt(p1,name,48,148,10,fB);dt(p1,'ADRES INWESTYCJI',219.7,136,6.5,fR,GRAY);dt(p1,address,219.7,148,10,fB);dt(p1,'DATA OFERTY',391.4,136,6.5,fR,GRAY);dt(p1,offerDate,391.4,148,10,fB);
+    dr(p1,32,161,532,28,3);dt(p1,'TELEFON',48,165,6.5,fR,GRAY);dt(p1,phone,48,176,9,fB);dt(p1,'E-MAIL',219.7,165,6.5,fR,GRAY);dt(p1,email,219.7,176,9,fB);dt(p1,'WAZNOSC OFERTY',391.4,165,6.5,fR,GRAY);dt(p1,'14 dni (do '+validUntil+')',391.4,176,9,fB);
 
-    setStatus('Wypelniuam zakres prac...');
+    setSt('Wypelniam zakres prac...');
+    const p3=pages[2];dr(p3,33,437,530,122,3,TEAL);
+    const scopes=[];if(s1&&a1)scopes.push({desc:s1,area:a1,thick:t1});if(s2&&a2)scopes.push({desc:s2,area:a2,thick:t2});if(s3&&a3)scopes.push({desc:s3,area:a3,thick:t3});
+    if(scopes.length<=1){const vol1=(a1*t1/100).toFixed(2);dt(p3,s1,49,459,11,fB,WHITE);dt(p3,'Powierzchnia',49,477,8,fR,LIGHT);dt(p3,'Srednia grubosc',49,491,8,fR,LIGHT);dt(p3,'Objetosc izolacji',49,505,8,fR,LIGHT);dt(p3,a1+' m2',238,477,10,fB,WHITE);dt(p3,t1+' cm',238,491,10,fB,WHITE);dt(p3,vol1+' m3',238,505,10,fB,WHITE);}
+    else{let ty=455;scopes.forEach((s,i)=>{const vol=(s.area*s.thick/100).toFixed(2);dt(p3,(i+1)+'. '+s.desc,49,ty,9,fB,WHITE);ty+=11;dt(p3,s.area+'m2 / '+s.thick+'cm / obj: '+vol+'m3',49,ty,8,fR,LIGHT);ty+=13;});const tv=scopes.reduce((a,s)=>a+(s.area*s.thick/100),0).toFixed(2);dt(p3,'Razem: '+totalArea+'m2 / obj: '+tv+'m3',49,ty+2,8,fB,WHITE);}
 
-    // === STRONA 3: zakres prac (do 3 zakresow) ===
-    const p3=pages[2];
-    // Przykryj caly zielony blok
-    drawRect(p3,33,437,530,122,3,TEAL);
-
-    // Buduj linie zakresu
-    const scopes=[];
-    if(scope1) scopes.push({desc:scope1, area:area1, thick:thick1});
-    if(scope2&&area2) scopes.push({desc:scope2, area:area2, thick:thick2});
-    if(scope3&&area3) scopes.push({desc:scope3, area:area3, thick:thick3});
-
-    if(scopes.length===1){
-      // Jeden zakres - oryginalny uklad
-      const vol1=(area1*thick1/100).toFixed(2);
-      drawText(p3,scope1,49,459,11,fontB,WHITE);
-      drawText(p3,'Powierzchnia',49,477,8,fontR,LIGHT);
-      drawText(p3,'Srednia grubosc',49,491,8,fontR,LIGHT);
-      drawText(p3,'Objetosc izolacji',49,505,8,fontR,LIGHT);
-      drawText(p3,area1+' m2',238,477,10,fontB,WHITE);
-      drawText(p3,thick1+' cm',238,491,10,fontB,WHITE);
-      drawText(p3,vol1+' m3',238,505,10,fontB,WHITE);
-    } else {
-      // Wiele zakresow - lista
-      let ty=455;
-      scopes.forEach((s,i)=>{
-        const vol=(s.area*s.thick/100).toFixed(2);
-        drawText(p3,(i+1)+'. '+s.desc,49,ty,9,fontB,WHITE);
-        ty+=11;
-        drawText(p3,s.area+'m2 / '+s.thick+'cm / obj: '+vol+'m3',49,ty,8,fontR,LIGHT);
-        ty+=13;
-      });
-      // Laczna powierzchnia
-      const totalVol=scopes.reduce((a,s)=>a+(s.area*s.thick/100),0).toFixed(2);
-      drawText(p3,'Razem: '+totalArea+'m2 / obj: '+totalVol+'m3',49,ty+2,8,fontB,WHITE);
-    }
-
-    setStatus('Wypełniam ceny wariantów...');
-
-    // === STRONA 4: ceny ===
+    setSt('Wypelniam ceny...');
     const p4=pages[3];
-    // EXY08 netto
-    drawRect(p4,33,335,163,52,3,WHITE);
-    drawText(p4,`${fmt(p08)} zl`,46.3,354,18,fontB,BLACK);
-    drawText(p4,`ok. ${fmt(p08b)} zl brutto (+ 8% VAT)`,46.3,368,8,fontR,GRAY);
-    // EXY09 netto
-    drawRect(p4,212,426,173,52,3,WHITE);
-    drawText(p4,`${fmt(p09)} zl`,225.7,444,18,fontB,BLACK);
-    drawText(p4,`ok. ${fmt(p09b)} zl brutto (+ 8% VAT)`,225.7,459,8,fontR,GRAY);
-    // EXY09+ cena (wariant premium)
-    if(p09plus>0){
-      const p09plusb=Math.round(p09plus*1.08);
-      drawRect(p4,390,335,163,52,3,WHITE);
-      drawText(p4,fmt(p09plus)+' zl',403.5,354,14,fontB,BLACK);
-      drawText(p4,'ok. '+fmt(p09plusb)+' zl brutto (+ 8% VAT)',403.5,368,7,fontR,GRAY);
-    }
-    // Waznosc w tabeli
-    drawRect(p4,309,677,205,19,2,WHITE);
-    drawText(p4,`14 dni (do ${validUntil})`,313.5,687,9,fontB,BLACK);
-    // Alert
-    drawRect(p4,33,716,530,17,2,AMBER_BG);
-    drawText(p4,`Oferta wazna: 14 dni (do ${validUntil})   Po tym terminie ceny moga ulec zmianie.`,61.3,726,8,fontB,AMBER);
+    dr(p4,33,335,163,52,3);dt(p4,fmt(p08)+' zl',46.3,354,18,fB);dt(p4,'ok. '+fmt(p08b)+' zl brutto (+ 8% VAT)',46.3,368,8,fR,GRAY);
+    dr(p4,212,426,173,52,3);dt(p4,fmt(p09)+' zl',225.7,444,18,fB);dt(p4,'ok. '+fmt(p09b)+' zl brutto (+ 8% VAT)',225.7,459,8,fR,GRAY);
+    if(p09p>0){const p09pb=Math.round(p09p*1.08);dr(p4,390,335,163,52,3);dt(p4,fmt(p09p)+' zl',403.5,354,14,fB);dt(p4,'ok. '+fmt(p09pb)+' zl brutto (+ 8% VAT)',403.5,368,7,fR,GRAY);}
+    dr(p4,309,677,205,19,2);dt(p4,'14 dni (do '+validUntil+')',313.5,687,9,fB);
+    dr(p4,33,716,530,17,2,AMBG);dt(p4,'Oferta wazna: 14 dni (do '+validUntil+')   Po tym terminie ceny moga ulec zmianie.',61.3,726,8,fB,AMBER);
 
-    setStatus('Generuję plik PDF...');
-    const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes],{type:'application/pdf'});
-    const url = URL.createObjectURL(blob);
-    const filename=`Oferta_Budivo_${name.replace(/\s+/g,'_')}_${offerDateInput||todayStr()}.pdf`;
-
-    currentPdfUrl=url; currentPdfName=filename;
-
-    // Zapisz w historii
-    const selCid=parseInt(document.getElementById('o-contact').value);
-    if(selCid){const c=contacts.find(x=>x.id===selCid);if(c&&(c.status==='new'||c.status==='meeting'))c.status='sent';}
-    generatedOffers.unshift({name,address,scope:scope1,area:totalArea,date:offerDateInput||todayStr(),url,filename});
-
-    document.getElementById('offer-progress').style.display='none';
-    document.getElementById('offer-result').style.display='block';
-    document.getElementById('offer-result-sub').textContent=`${name} · ${address}`;
-    document.getElementById('offer-dl-btn').onclick=()=>{
-      const a=document.createElement('a');a.href=url;a.download=filename;a.click();
-    };
-
-  } catch(err) {
-    console.error(err);
-    document.getElementById('offer-progress').style.display='none';
-    document.getElementById('offer-error').style.display='block';
-    document.getElementById('offer-error-msg').textContent='Błąd: '+err.message;
-  }
+    setSt('Generuje PDF...');
+    const pdfBytes=await doc.save();const blob=new Blob([pdfBytes],{type:'application/pdf'});const url=URL.createObjectURL(blob);
+    const filename='Oferta_Budivo_'+pl(name).replace(/\s+/g,'_')+'_'+(od||todayStr())+'.pdf';
+    const selCid=parseInt(document.getElementById('o-cid').value);
+    if(selCid){const c=contacts.find(x=>x.id===selCid);if(c&&(c.status==='new'||c.status==='meeting')){c.status='sent';if(!c.history)c.history=[];c.history.push({status:'sent',date:todayStr()});}}
+    genOffers.unshift({name,address,scope:pl(s1),area:totalArea,date:od||todayStr(),url,filename});
+    document.getElementById('off-prog').style.display='none';document.getElementById('off-result').style.display='block';
+    document.getElementById('off-rsub').textContent=name+' · '+address;
+    document.getElementById('off-dl').onclick=()=>{const a=document.createElement('a');a.href=url;a.download=filename;a.click();};
+  }catch(err){document.getElementById('off-prog').style.display='none';document.getElementById('off-err').style.display='block';document.getElementById('off-errmsg').textContent='Blad: '+err.message;}
 }
+function resetOffer(){document.getElementById('off-form').style.display='block';document.getElementById('off-prog').style.display='none';document.getElementById('off-result').style.display='none';document.getElementById('off-err').style.display='none';}
 
-function resetOffer(){
-  document.getElementById('offer-form').style.display='block';
-  document.getElementById('offer-progress').style.display='none';
-  document.getElementById('offer-result').style.display='none';
-  document.getElementById('offer-error').style.display='none';
-}
-
-// ===== INIT =====
-renderHome();
+showScreen('home');
 </script>
 </body>
 </html>
