@@ -113,10 +113,10 @@ textarea{height:60px;resize:none}
 .note-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:11px;margin-bottom:7px}
 .note-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
 .note-ai{font-size:12px;color:#0F6E56;margin-top:5px;padding-top:5px;border-top:1px solid var(--border2)}
-.wa-tpl{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:8px}
-.wa-tpl-name{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px}
-.wa-tpl-text{font-size:13px;color:var(--text);line-height:1.5;margin-bottom:8px}
-.wa-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;background:#25D366;color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer}
+.sms-tpl{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:8px}
+.sms-tpl-name{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px}
+.sms-tpl-text{font-size:13px;color:var(--text);line-height:1.5;margin-bottom:8px}
+.sms-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;background:var(--bl);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer}
 .hist-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)}
 .hist-dot{width:8px;height:8px;border-radius:50%;background:var(--or);flex-shrink:0}
 .hist-txt{font-size:13px;flex:1}
@@ -134,6 +134,12 @@ textarea{height:60px;resize:none}
 .bar-val{font-size:9px;font-weight:600;color:var(--or-d)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .pulse{animation:pulse 1.2s ease-in-out infinite}
+
+/* Asystent głosowy */
+#ast-mic-btn.listening {background:var(--re);animation:pulse 1s ease-in-out infinite;}
+#ast-mic-btn.thinking {background:var(--am);animation:spin .8s linear infinite;}
+.cmd-example {font-size:11px;color:var(--muted);padding:6px 10px;background:var(--bg);border-radius:20px;margin:3px;display:inline-block;cursor:pointer}
+.cmd-example:active{background:var(--or-l)}
 </style>
 </head>
 <body>
@@ -144,6 +150,7 @@ textarea{height:60px;resize:none}
   <div class="topbar">
     <div class="tb-left"><div class="logo">🏠</div><div><div class="tb-title">Budivo CRM</div><div class="tb-sub" id="today-lbl"></div></div></div>
     <button class="tb-btn" onclick="openSheet('sh-contact')">+</button>
+    <button onclick="openAssistant()" style="width:44px;height:44px;border-radius:50%;background:var(--or);border:none;cursor:pointer;color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;margin-left:4px" title="Asystent głosowy">🎙</button>
   </div>
   <div class="content"><div class="sp">
     <div class="qg">
@@ -251,6 +258,7 @@ textarea{height:60px;resize:none}
     <div class="sh"></div><div class="stitle">🔔 Nowy termin</div>
     <div class="fr"><label>Kontakt</label><select id="r-cid" style="width:100%"></select></div>
     <div class="f2"><div class="fr"><label>Typ</label><select id="r-type"><option value="meeting">Spotkanie</option><option value="offer">Wyślij ofertę</option><option value="follow">Follow-up</option></select></div><div class="fr"><label>Data</label><input type="date" id="r-date"></div></div>
+    <div class="f2"><div class="fr"><label>Godzina (opcjonalnie)</label><input type="time" id="r-time" placeholder="09:00"></div><div class="fr"><label>Czas trwania</label><select id="r-dur"><option value="">—</option><option value="30 min">30 min</option><option value="1 godz">1 godz</option><option value="2 godz">2 godz</option><option value="pol dnia">Pół dnia</option></select></div></div>
     <div class="fr"><label>Opis</label><input type="text" id="r-note" placeholder="np. Wycena poddasza"></div>
     <button class="bp" onclick="saveReminder()">Dodaj termin</button>
     <button class="bs" onclick="closeSheet('sh-reminder')">Anuluj</button>
@@ -277,11 +285,11 @@ textarea{height:60px;resize:none}
 </div>
 
 <!-- SHEET: WhatsApp -->
-<div class="ovl" id="sh-whatsapp" onclick="ovc(event,'sh-whatsapp')">
+<div class="ovl" id="sh-sms" onclick="ovc(event,'sh-whatsapp')">
   <div class="sheet">
-    <div class="sh"></div><div class="stitle">💬 Szablony WhatsApp</div>
-    <div id="wa-templates"></div>
-    <button class="bs" onclick="closeSheet('sh-whatsapp')">Zamknij</button>
+    <div class="sh"></div><div class="stitle">💬 Wyślij SMS</div>
+    <div id="sms-templates"></div>
+    <button class="bs" onclick="closeSheet('sh-sms')">Zamknij</button>
   </div>
 </div>
 
@@ -442,7 +450,7 @@ function renderContacts(){
         <div style="display:flex;align-items:center;gap:10px"><div class="av">${initials(c.name)}</div><div><div class="cn">${c.name}</div><div class="cm">${c.city||'—'} · ${c.product}</div></div></div>
         <div style="display:flex;align-items:center;gap:5px">
           <span class="bdg ${SC[c.status]}">${SL[c.status]}</span>
-          <button onclick="event.stopPropagation();openWA(${c.id})" style="font-size:18px;background:none;border:none;cursor:pointer" title="WhatsApp">💬</button>
+          <button onclick="event.stopPropagation();openWA(${c.id})" style="font-size:18px;background:none;border:none;cursor:pointer" title="Wyślij SMS">💬</button>
           <button onclick="event.stopPropagation();deleteContact(${c.id})" style="font-size:16px;background:none;border:none;cursor:pointer;color:var(--re)" title="Usuń">🗑</button>
         </div>
       </div>
@@ -467,7 +475,7 @@ function renderReminders(){
     const over=r.date<ts&&!r.done;
     return`<div class="rem${over?' over':''}" style="${r.done?'opacity:.45':''}">
       <div class="dot ${RD[r.type]}"></div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">${RT[r.type]}</div><div style="font-size:12px;color:var(--muted)">${c?c.name:'—'} · ${r.note}</div><div style="font-size:11px;color:var(--light);margin-top:2px">${fmtDate(r.date)}</div></div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${RT[r.type]}</div><div style="font-size:12px;color:var(--muted)">${c?c.name:'—'} · ${r.noteDisplay||r.note}</div><div style="font-size:11px;color:var(--light);margin-top:2px">${fmtDate(r.date)}${r.time?' · '+r.time:''}</div></div>
       <button class="ckb" onclick="toggleDone(${r.id})">✓</button>
       <button class="del-btn" onclick="deleteReminder(${r.id})">🗑</button>
     </div>`;
@@ -577,7 +585,7 @@ function openDetail(id){
         <div><div style="font-size:17px;font-weight:700">${c.name}</div><div style="font-size:13px;color:var(--muted)">${c.city||'—'} · ${c.product}</div></div>
       </div>
       <div style="display:flex;gap:5px">
-        <button onclick="openWA(${id})" class="tb-btn" title="WhatsApp">💬</button>
+        <button onclick="openSMS(${id})" class="tb-btn" title="Wyślij SMS">💬</button>
         <button onclick="deleteContactFromDetail(${id})" class="tb-btn" style="color:var(--re)" title="Usuń">🗑</button>
       </div>
     </div>
@@ -601,7 +609,7 @@ function openDetail(id){
     <div class="st">Terminy (${cRems.length})</div>
     ${cRems.map(r=>`<div class="rem" style="margin-bottom:6px${r.done?';opacity:.45':''}">
       <div class="dot ${RD[r.type]}"></div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">${RT[r.type]}</div><div style="font-size:12px;color:var(--muted)">${r.note} · ${fmtDate(r.date)}</div></div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${RT[r.type]}</div><div style="font-size:12px;color:var(--muted)">${(r.noteDisplay||r.note)} · ${fmtDate(r.date)}</div></div>
       <button class="ckb" onclick="toggleDoneD(${r.id})">✓</button>
       <button class="del-btn" onclick="deleteReminderD(${r.id})">🗑</button>
     </div>`).join('')}
@@ -644,7 +652,7 @@ function handlePhoto(id,input){
 }
 function delPhoto(id,pi){if(!confirm('Usunąć zdjęcie?'))return;const c=contacts.find(x=>x.id===id);if(c&&c.photos){c.photos.splice(pi,1);openDetail(id);}}
 
-function openWA(id){
+function openSMS(id){
   const c=contacts.find(x=>x.id===id);if(!c)return;
   const phone=c.phone.replace(/\D/g,'');
   const templates=[
@@ -652,18 +660,22 @@ function openWA(id){
     {name:'Oferta wysłana',text:`Dzień dobry ${c.name},\n\nW załączniku przesyłam ofertę izolacji pianą PUR. Oferta ważna 14 dni. Zapraszam do kontaktu w razie pytań.\n\nDaniel\nBudivo\n📞 888 172 220`},
     {name:'Follow-up po wycenie',text:`Dzień dobry ${c.name},\n\nChciałem zapytać czy miał/a Pan/Pani okazję zapoznać się z naszą ofertą? Chętnie odpowiem na wszelkie pytania.\n\nDaniel\nBudivo\n📞 888 172 220`},
     {name:'Prośba o opinię Google',text:`Dzień dobry ${c.name},\n\nDziękuję za zaufanie i wybór Budivo! Jeśli jest Pan/Pani zadowolony/a z realizacji, będę bardzo wdzięczny za wystawienie opinii w Google 🙏\n\nDaniel\nBudivo`},
-    {name:'Przypomnienie o terminie',text:`Dzień dobry ${c.name},\n\nPrzypominam o jutrzejszym spotkaniu w sprawie ocieplenia. Do zobaczenia!\n\nDaniel\nBudivo\n📞 888 172 220`},
+    {name:'Przypomnienie o terminie',text:`Dzień dobry ${c.name},\n\nPrzypominam o jutrzejszym spotkaniu. Do zobaczenia!\n\nDaniel Budivo 888 172 220`},
+    {name:'Potwierdzenie otrzymania oferty',text:`Dzień dobry ${c.name},\n\nChciałem upewnić się że dotarła oferta. Czy wszystko jasne? Chętnie odpowiem na pytania lub umówię spotkanie.\n\nDaniel Budivo 888 172 220`},
+    {name:'Pytanie o decyzję',text:`Dzień dobry ${c.name},\n\nMija kilka dni od wysłania oferty. Czy podjął/a Pan/Pani już decyzję? Chętnie pomogę rozwiać wątpliwości.\n\nDaniel Budivo 888 172 220`},
+    {name:'Po wykonaniu pracy',text:`Dzień dobry ${c.name},\n\nDziękuję za zlecenie! Mam nadzieję że jest Pan/Pani zadowolony/a z efektów. W razie pytań jestem do dyspozycji.\n\nDaniel Budivo 888 172 220`},
+    {name:'Propozycja spotkania',text:`Dzień dobry ${c.name},\n\nChciałem zaproponować spotkanie w celu omówienia szczegółów ocieplenia. Kiedy byłoby najdogodniej?\n\nDaniel Budivo 888 172 220`},
   ];
   document.getElementById('wa-templates').innerHTML=templates.map((t,i)=>`
-    <div class="wa-tpl">
-      <div class="wa-tpl-name">${t.name}</div>
-      <div class="wa-tpl-text">${t.text.replace(/\n/g,'<br>')}</div>
-      <button class="wa-btn" onclick="sendWA('${phone}',${i})">💬 Otwórz WhatsApp</button>
+    <div class="sms-tpl">
+      <div class="sms-tpl-name">${t.name}</div>
+      <div class="sms-tpl-text">${t.text.replace(/\n/g,'<br>')}</div>
+      <button class="sms-btn" onclick="sendSMS('${phone}',${i})">💬 Otwórz WhatsApp</button>
     </div>`).join('');
-  window._waTpls=templates;
-  openSheet('sh-whatsapp');
+  window._smsTpls=templates;window._waTpls=templates;
+  openSheet('sh-sms');
 }
-function sendWA(phone,i){const text=encodeURIComponent(window._waTpls[i].text);const url=phone?`https://wa.me/48${phone}?text=${text}`:`https://wa.me/?text=${text}`;window.open(url,'_blank');}
+function sendSMS(phone,i){const text=encodeURIComponent(window._smsTpls[i].text);const url=phone?'sms:+48'+phone+'?body='+text:'sms:?body='+text;window.location.href=url;}
 
 function buildWave(){const w=document.getElementById('wave');w.innerHTML='';for(let i=0;i<26;i++){const b=document.createElement('div');b.className='wb';b.id='wb'+i;b.style.height='3px';w.appendChild(b);}}
 function toggleRec(){if(!isRec)startRec();else stopRec();}
@@ -683,31 +695,148 @@ function stopRec(){
   for(let i=0;i<26;i++){const el=document.getElementById('wb'+i);if(el)el.style.height='3px';}
   simulateTranscript();
 }
-const DEMOS=[
-  {t:'Bylem dzis u Kowalskich. Chca ocieplic poddasze okolo 90 metrow. Piana PUR. Maja budzet do 10 tys. Dadza znac w przyszlym tygodniu.',s:'Klient: Kowalscy, poddasze 90m2, piana PUR, budzet 10k. Follow-up za tydzien.'},
-  {t:'Zadzwonil Pan z Lancuta w sprawie hali magazynowej. 600 metrow, dach i sciany. Prosi o kontakt do konca tygodnia. Firma budowlana.',s:'Nowy lead: hala 600m2 Lancut, dach+sciany. Pilne - oddzwonic do piatku.'},
-  {t:'Spotkanie z klientem. Zainteresowany wariantem EXY 09. Pyta o mozliwosc rozlozenia platnosci na dwie czesci. Chce oferte.',s:'Klient zainteresowany EXY 09, pyta o raty. Wyslac oferte.'},
-];
-function simulateTranscript(){
-  const tb=document.getElementById('tbox');tb.textContent='Przetwarzam nagranie...';
-  setTimeout(()=>{
-    const demo=DEMOS[Math.floor(Math.random()*DEMOS.length)];
-    tb.textContent=demo.t;
-    document.getElementById('ai-area').innerHTML=`<div style="font-size:12px;color:var(--muted);margin:6px 0 4px;display:flex;align-items:center;gap:5px"><div class="spin" style="width:14px;height:14px;border-width:2px;margin:0"></div> AI analizuje...</div>`;
-    setTimeout(()=>{
-      document.getElementById('ai-area').innerHTML=`<div class="ai-box"><div class="ai-lbl">✨ Streszczenie AI</div><div class="ai-txt">${demo.s}</div></div>`;
-      const m=Math.floor(recSecs/60);const s=recSecs%60;const dur=m+':'+(s<10?'0':'')+s;
-      document.getElementById('v-actions').innerHTML=`<button class="bp" style="margin-top:10px" onclick="saveVoiceNote('${demo.t}','${demo.s}','${dur}')">💾 Zapisz notatkę</button>`;
-    },1800);
-  },900);
+// ===== AI VOICE SYSTEM =====
+async function simulateTranscript(){
+  const tb=document.getElementById('tbox');
+  tb.textContent='Przetwarzam nagranie...';
+  document.getElementById('ai-area').innerHTML='';
+  document.getElementById('v-actions').innerHTML='';
+
+  const DEMOS=[
+    'Bylem dzis u Pana Tomka Wrony z Rzeszowa, ulica Kwiatowa 8. Telefon 512 987 654. Chce ocieplic poddasze, ma okolo 85 metrow, grubosc 25 cm. Piana PUR. Budzet do 12 tysiecy. Mozemy spotkac sie w srode o 10 rano.',
+    'Zadzwonila Pani Agnieszka Lis z Lezajska, tel 601 234 567. Dom jednorodzinny, interesuje ja strop, celuloza, 60 metrow. Prosi o wycene do piatku. Wartosc okolo 8 tysiecy.',
+    'Bylem na budowie u Kowalskiego. Akceptuje oferte EXY 09 na 11500 zlotych. Chce podpisac umowe w czwartek o 14. Zmien status na zaakceptowana.',
+    'Nowy klient - firma Deweloper Plus, kontakt Pan Marek, telefon 888 111 222. 3 hale po 400 metrow. Celuloza. Umow spotkanie na przyszly tydzien.',
+  ];
+  const transcript=DEMOS[Math.floor(Math.random()*DEMOS.length)];
+  await new Promise(r=>setTimeout(r,700));
+  tb.textContent=transcript;
+  document.getElementById('ai-area').innerHTML='<div style="font-size:12px;color:var(--muted);margin:6px 0 4px;display:flex;align-items:center;gap:5px"><div class="spin" style="width:14px;height:14px;border-width:2px;margin:0"></div> AI analizuje...</div>';
+
+  try{
+    const cid=parseInt(document.getElementById('v-cid').value)||null;
+    const curC=cid?contacts.find(x=>x.id===cid):null;
+    const cList=contacts.map(c=>'ID:'+c.id+' '+c.name).join(', ');
+    const today=new Date().toISOString().slice(0,10);
+
+    const prompt='Jestes asystentem CRM firmy ocieplajacej budynki (piana PUR, celuloza Honter). '+
+      'Transkrypcja notatki: "'+transcript+'" '+
+      'Aktualny kontakt: '+(curC?curC.name:'brak')+'. '+
+      'Kontakty w CRM: '+cList+'. '+
+      'Dzisiaj: '+today+'. '+
+      'Zwroc TYLKO poprawny JSON (bez markdown), format: '+
+      '{"summary":"streszczenie 1-2 zdania po polsku","intent":"contact_create|status_change|reminder_add|note_only",'+
+      '"contact":{"name":null,"phone":null,"city":null,"address":null,"product":null,"area_m2":null,"thickness_cm":null,"value_pln":null,"notes":null,"existing_id":null},'+
+      '"reminder":{"type":null,"date":null,"time":null,"note":null},'+
+      '"status_change":{"contact_id":null,"new_status":null},'+
+      '"actions":["lista akcji po polsku"]}';
+
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:prompt}]})
+    });
+    const data=await resp.json();
+    const raw=data.content[0].text.replace(/```json|```/g,'').trim();
+    const json=JSON.parse(raw);
+    renderAIActions(json,transcript);
+  }catch(err){
+    console.log('AI fallback:',err.message);
+    const m=Math.floor(recSecs/60);const s=recSecs%60;const dur=m+':'+(s<10?'0':'')+s;
+    document.getElementById('ai-area').innerHTML='<div class="ai-box"><div class="ai-lbl">✨ Transkrypcja gotowa</div><div class="ai-txt">'+transcript.slice(0,120)+'...</div></div>';
+    document.getElementById('v-actions').innerHTML='<button class="bp" style="margin-top:10px" onclick="saveVoiceNote(''+transcript.replace(/'/g,"\'")+'',[no_sum],''+dur+'')">💾 Zapisz notatkę</button>'.replace('[no_sum]',"''");
+  }
 }
-function saveVoiceNote(transcript,summary,dur){
+
+function renderAIActions(json,transcript){
+  const m=Math.floor(recSecs/60);const s=recSecs%60;const dur=m+':'+(s<10?'0':'')+s;
+  let html='<div class="ai-box"><div class="ai-lbl">✨ Analiza AI</div><div class="ai-txt">'+json.summary+'</div></div>';
+  if(json.actions&&json.actions.length){
+    html+='<div style="margin-top:7px;font-size:11px;font-weight:600;color:var(--muted)">Sugerowane akcje:</div><ul style="margin:4px 0 0 14px;font-size:12px">'+json.actions.map(a=>'<li>'+a+'</li>').join('')+'</ul>';
+  }
+  document.getElementById('ai-area').innerHTML=html;
+
+  let btns='<div style="display:flex;flex-direction:column;gap:7px;margin-top:10px">';
+
+  // Nowy kontakt
+  if(json.intent==='contact_create'&&json.contact&&json.contact.name){
+    const cd=json.contact;
+    btns+='<button class="bp" style="background:#3B6D11" onclick="aiCreateContact('+
+      JSON.stringify(cd).replace(/"/g,"'")
+      .replace(/'/g,'"')+
+      ',[TRN],[SUM],[DUR])">👤 Dodaj kontakt: '+cd.name+'</button>';
+    // Uzyj data-atrybutow zamiast inline
+    btns='<div style="display:flex;flex-direction:column;gap:7px;margin-top:10px">';
+    window._aiData={cd,transcript,summary:json.summary,dur};
+    btns+='<button class="bp" style="background:#3B6D11" onclick="aiCreateContactFromData()">👤 Dodaj kontakt: '+cd.name+'</button>';
+  }
+
+  // Zmiana statusu
+  if(json.status_change&&json.status_change.new_status&&json.status_change.new_status!=='null'){
+    const sc=json.status_change;
+    const tcid=sc.contact_id||parseInt(document.getElementById('v-cid').value)||null;
+    const tc=tcid?contacts.find(x=>x.id===tcid):null;
+    if(tc){
+      window._aiData=Object.assign(window._aiData||{},{sc,tcid,transcript,summary:json.summary,dur});
+      btns+='<button class="bp" style="background:#854F0B" onclick="aiChangeStatusFromData()">🔄 Zmień status: '+tc.name+' → '+SL[sc.new_status]+'</button>';
+    }
+  }
+
+  // Termin
+  if(json.reminder&&json.reminder.type&&json.reminder.type!=='null'){
+    const rem=json.reminder;
+    const tcid=parseInt(document.getElementById('v-cid').value)||null;
+    window._aiData=Object.assign(window._aiData||{},{rem,tcid,transcript,summary:json.summary,dur});
+    const timeLabel=rem.time&&rem.time!=='null'?' o '+rem.time:'';
+    const dateLabel=rem.date&&rem.date!=='null'&&rem.date!==todayStr()?' '+fmtDate(rem.date):'';
+    btns+='<button class="bp" style="background:#185FA5" onclick="aiAddReminderFromData()">🔔 Dodaj termin: '+(RT[rem.type]||'Spotkanie')+timeLabel+dateLabel+'</button>';
+  }
+
+  // Zawsze - zapisz notatkę
+  window._aiData=Object.assign(window._aiData||{},{transcript,summary:json.summary,dur});
+  btns+='<button class="bp" style="background:var(--or-d)" onclick="aiSaveNoteOnly()">💾 Zapisz notatkę głosową</button>';
+  btns+='</div>';
+  document.getElementById('v-actions').innerHTML=btns;
+}
+
+function aiCreateContactFromData(){
+  const d=window._aiData||{};const cd=d.cd||{};
+  const c={id:nextId++,name:cd.name||'Nowy klient',phone:cd.phone||'',email:'',city:cd.city||'',address:cd.address||'',product:cd.product||'piana PUR',status:'new',value:cd.value_pln||0,notes:cd.notes||(cd.area_m2?'Pow: '+cd.area_m2+'m2'+(cd.thickness_cm?', gr: '+cd.thickness_cm+'cm':''):''),added:todayStr(),history:[{status:'new',date:todayStr()}],photos:[],notes_voice:[{date:todayStr(),duration:d.dur||'0:30',transcript:d.transcript||'',summary:d.summary||''}]};
+  contacts.push(c);
+  closeSheet('sh-voice');
+  renderHome();
+  setTimeout(()=>openDetail(c.id),100);
+}
+
+function aiChangeStatusFromData(){
+  const d=window._aiData||{};
+  const c=contacts.find(x=>x.id===d.tcid);if(!c)return;
+  c.status=d.sc.new_status;if(!c.history)c.history=[];c.history.push({status:d.sc.new_status,date:todayStr()});
+  if(!c.notes_voice)c.notes_voice=[];c.notes_voice.push({date:todayStr(),duration:d.dur||'0:30',transcript:d.transcript||'',summary:d.summary||''});
+  closeSheet('sh-voice');
+  setTimeout(()=>openDetail(d.tcid),100);
+}
+
+function aiAddReminderFromData(){
+  const d=window._aiData||{};const rem=d.rem||{};
+  const date=rem.date&&rem.date!=='null'?rem.date:todayStr();
+  const time=rem.time&&rem.time!=='null'?rem.time:'';
+  const note=rem.note&&rem.note!=='null'?rem.note:(RT[rem.type]||'Termin');
+  const noteDisplay=time?note+' (godz. '+time+')':note;
+  reminders.push({id:nextRid++,cid:d.tcid||null,type:rem.type,date,time,note,noteDisplay,done:false});
+  if(d.tcid){const c=contacts.find(x=>x.id===d.tcid);if(c){if(!c.notes_voice)c.notes_voice=[];c.notes_voice.push({date:todayStr(),duration:d.dur||'0:30',transcript:d.transcript||'',summary:d.summary||''}); }}
+  closeSheet('sh-voice');
+  const s=getCur();if(s==='home')renderHome();if(s==='reminders')renderReminders();if(s==='calendar')renderCalendar();
+}
+
+function aiSaveNoteOnly(){
+  const d=window._aiData||{};
   const cid=parseInt(document.getElementById('v-cid').value)||null;
-  const note={date:todayStr(),duration:dur||'0:30',transcript,summary};
-  if(cid){const c=contacts.find(x=>x.id===cid);if(c){if(!c.notes_voice)c.notes_voice=[];c.notes_voice.push(note);}}
+  if(cid){const c=contacts.find(x=>x.id===cid);if(c){if(!c.notes_voice)c.notes_voice=[];c.notes_voice.push({date:todayStr(),duration:d.dur||'0:30',transcript:d.transcript||'',summary:d.summary||''}); }}
   closeSheet('sh-voice');
   if(getCur()==='detail')openDetail(detailId);
 }
+
 function delVoiceNote(cid,ni){if(!confirm('Usunąć notatkę?'))return;const c=contacts.find(x=>x.id===cid);if(c&&c.notes_voice){c.notes_voice.splice(ni,1);openDetail(cid);}}
 
 function saveContact(){
@@ -724,7 +853,11 @@ function saveContact(){
 function saveReminder(){
   const d=document.getElementById('r-date').value;if(!d)return;
   const cid=parseInt(document.getElementById('r-cid').value)||null;
-  reminders.push({id:nextRid++,cid,type:document.getElementById('r-type').value,date:d,note:document.getElementById('r-note').value,done:false});
+  const rtime=document.getElementById('r-time').value||'';
+  const rdur=document.getElementById('r-dur').value||'';
+  const rnote=document.getElementById('r-note').value;
+  const rnoteWithTime=rtime?(rnote+' (godz. '+rtime+(rdur?' / '+rdur:'')+')'):rnote;
+  reminders.push({id:nextRid++,cid,type:document.getElementById('r-type').value,date:d,time:rtime,dur:rdur,note:rnote,noteDisplay:rnoteWithTime,done:false});
   closeSheet('sh-reminder');
   const s=getCur();if(s==='home')renderHome();if(s==='reminders')renderReminders();if(s==='calendar')renderCalendar();
 }
@@ -801,6 +934,312 @@ async function generateOffer(){
 function resetOffer(){document.getElementById('off-form').style.display='block';document.getElementById('off-prog').style.display='none';document.getElementById('off-result').style.display='none';document.getElementById('off-err').style.display='none';}
 
 showScreen('home');
+
+// ===== ASYSTENT GŁOSOWY =====
+let astRecording=false, astSecs=0, astInt=null, astWvInt=null;
+
+function openAssistant(){
+  // Reset
+  document.getElementById('ast-mic-btn').className='';
+  document.getElementById('ast-mic-btn').textContent='🎙';
+  document.getElementById('ast-status').textContent='Kliknij i mów';
+  document.getElementById('ast-timer').textContent='';
+  document.getElementById('ast-transcript').style.cssText='min-height:48px;background:var(--bg);border-radius:var(--rs);padding:12px;font-size:14px;color:var(--muted);margin-bottom:12px;line-height:1.5;text-align:center;font-style:italic';
+  document.getElementById('ast-transcript').innerHTML=`
+    <div style="font-size:12px;color:var(--text);line-height:1.8;text-align:left">
+      <div style="font-weight:600;color:var(--or-d);margin-bottom:6px">📋 Co mogę powiedzieć:</div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div>👤 <b>Nowy klient:</b> <span style="color:var(--muted)">"Dodaj klienta Jan Kowalski Rzeszów, tel 500 100 200, poddasze 80 metrów piana PUR"</span></div>
+        <div>🔔 <b>Termin:</b> <span style="color:var(--muted)">"Umów spotkanie z Kowalskim w piątek o dziesiątej"</span></div>
+        <div>🔄 <b>Status:</b> <span style="color:var(--muted)">"Kowalski zaakceptował ofertę / odrzucił / wysłałem ofertę"</span></div>
+        <div>📄 <b>Oferta:</b> <span style="color:var(--muted)">"Generuj ofertę dla Kowalskiego, 80 metrów, cena 9500"</span></div>
+        <div>📞 <b>Telefon:</b> <span style="color:var(--muted)">"Zadzwoń do Kowalskiego"</span></div>
+        <div>💬 <b>SMS:</b> <span style="color:var(--muted)">"Napisz SMS do Kowalskiego żeby potwierdził ofertę"</span></div>
+        <div>📝 <b>Notatka:</b> <span style="color:var(--muted)">"Dodaj notatkę do Kowalskiego: zadowolony, polecił znajomego"</span></div>
+        <div>📊 <b>Ekran:</b> <span style="color:var(--muted)">"Pokaż statystyki / terminy / kontakty"</span></div>
+      </div>
+    </div>
+  `;
+  document.getElementById('ast-result').style.display='none';
+  document.getElementById('ast-actions').style.display='none';
+  document.getElementById('ast-result').innerHTML='';
+  document.getElementById('ast-actions').innerHTML='';
+  
+  // Zbuduj fale
+  const w=document.getElementById('ast-wave');w.innerHTML='';
+  for(let i=0;i<28;i++){const b=document.createElement('div');b.className='wb';b.id='aw'+i;b.style.height='3px';w.appendChild(b);}
+  
+  openSheet('sh-assistant');
+}
+
+function toggleAssistant(){
+  if(!astRecording) startAssistant();
+  else stopAssistant();
+}
+
+function startAssistant(){
+  astRecording=true; astSecs=0;
+  const btn=document.getElementById('ast-mic-btn');
+  btn.id='ast-mic-btn';btn.className='listening';btn.textContent='⏹';
+  document.getElementById('ast-status').textContent='Słucham...';
+  document.getElementById('ast-status').style.color='var(--re)';
+  document.getElementById('ast-result').style.display='none';
+  document.getElementById('ast-actions').style.display='none';
+  
+  astInt=setInterval(()=>{
+    astSecs++;
+    const m=Math.floor(astSecs/60),s=astSecs%60;
+    document.getElementById('ast-timer').textContent=m+':'+(s<10?'0':'')+s;
+    if(astSecs>=30) stopAssistant(); // auto-stop po 30s
+  },1000);
+  astWvInt=setInterval(()=>{
+    for(let i=0;i<28;i++){const el=document.getElementById('aw'+i);if(el)el.style.height=Math.max(3,Math.floor(Math.random()*22))+'px';}
+  },100);
+}
+
+function stopAssistant(){
+  if(!astRecording)return;
+  astRecording=false;
+  clearInterval(astInt);clearInterval(astWvInt);
+  for(let i=0;i<28;i++){const el=document.getElementById('aw'+i);if(el)el.style.height='3px';}
+  
+  const btn=document.getElementById('ast-mic-btn');
+  btn.className='thinking';btn.textContent='⏳';
+  document.getElementById('ast-status').textContent='Analizuję...';
+  document.getElementById('ast-status').style.color='var(--am)';
+  document.getElementById('ast-timer').textContent='';
+  
+  processVoiceCommand();
+}
+
+async function processVoiceCommand(){
+  // Symulacja rozpoznawania - demo komendy
+  const COMMANDS=[
+    'Dodaj klienta Tomasz Wrona z Rzeszowa, ulica Kwiatowa 8, telefon 512 987 654. Poddasze 85 metrow, piana PUR, budzet 12 tysiecy.',
+    'Umow spotkanie z Anna Wisniewska w piatek o godzinie 10 rano. Wycena poddasza.',
+    'Kowalski zaakceptowal oferte EXY 09 za 11500 zlotych. Zmien status na zaakceptowana.',
+    'Zadzwon do Budex w sprawie oferty celuloza.',
+    'Wyslij Wisniewskiej WhatsApp z potwierdzeniem spotkania.',
+    'Generuj oferte dla Piotra Zajaca, 90 metrow kwadratowych, grubosc 25 cm, cena EXY08 9500 EXY09 11500.',
+    'Dodaj notatke do Kowalskiego: klient zadowolony, polecil znajomego z Boguchwaly.',
+    'Pokaz statystyki.',
+    'Pokaz terminow na ten tydzien.',
+  ];
+  const cmd=COMMANDS[Math.floor(Math.random()*COMMANDS.length)];
+  
+  // Pokazz transkrypcje
+  const tr=document.getElementById('ast-transcript');
+  tr.style.cssText='min-height:48px;background:var(--card);border:1px solid var(--border2);border-radius:var(--rs);padding:12px;font-size:14px;color:var(--text);margin-bottom:12px;line-height:1.5';
+  tr.textContent='"'+cmd+'"';
+  
+  try{
+    const cList=contacts.map(c=>'ID:'+c.id+' '+c.name+' ('+c.city+') tel:'+c.phone).join('; ');
+    const today=new Date().toISOString().slice(0,10);
+    const weekday=['niedziela','poniedzialek','wtorek','sroda','czwartek','piatek','sobota'][new Date().getDay()];
+    
+    const prompt=
+      'Jestes asystentem glosowym CRM dla firmy ocieplajacej (piana PUR Honter, celuloza). '+
+      'Komenda uzytkownika: "'+cmd+'". '+
+      'Kontakty w CRM: '+cList+'. '+
+      'Dzisiaj: '+today+' ('+weekday+'). '+
+      'Zwroc TYLKO JSON bez markdown:
+'+
+      '{"action":"add_contact|add_reminder|change_status|generate_offer|call|whatsapp|add_note|show_screen|unknown",'+
+      '"confidence":0-100,'+
+      '"message":"co zostanie zrobione (po polsku, 1 zdanie)",'+
+      '"contact":{"name":null,"phone":null,"city":null,"address":null,"product":null,"area_m2":null,"thickness_cm":null,"value_pln":null,"existing_id":null},'+
+      '"reminder":{"contact_id":null,"type":"meeting|offer|follow","date":"YYYY-MM-DD","time":"HH:MM","note":null},'+
+      '"status":{"contact_id":null,"new_status":"new|meeting|sent|accepted|rejected"},'+
+      '"offer":{"contact_id":null,"area_m2":null,"thickness_cm":null,"price_08":null,"price_09":null},'+
+      '"note":{"contact_id":null,"text":null},'+
+      '"screen":"home|contacts|reminders|calendar|stats|offers",'+
+      '"call_id":null,'+
+      '"sms_template":null,"sms_id":null}';
+
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:prompt}]})
+    });
+    const data=await resp.json();
+    const json=JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
+    executeVoiceCommand(json);
+    
+  }catch(err){
+    console.log('AI error:',err);
+    showAstError('Nie udalo sie przetworzyc komendy. Sprobuj ponownie.');
+  }
+}
+
+function executeVoiceCommand(json){
+  const btn=document.getElementById('ast-mic-btn');
+  btn.className='';btn.textContent='✓';btn.style.background='var(--gr)';
+  document.getElementById('ast-status').textContent='Gotowe!';
+  document.getElementById('ast-status').style.color='var(--gr)';
+  
+  const res=document.getElementById('ast-result');
+  const acts=document.getElementById('ast-actions');
+  res.style.display='block'; acts.style.display='block';
+  
+  res.innerHTML='<div class="ai-box" style="margin-bottom:10px"><div class="ai-lbl">✅ Rozpoznana akcja ('+json.confidence+'% pewności)</div><div class="ai-txt" style="font-size:14px;font-weight:600">'+json.message+'</div></div>';
+  
+  let btnsHtml='<div style="display:flex;flex-direction:column;gap:8px">';
+  
+  switch(json.action){
+    
+    case 'add_contact':
+      window._astData=json;
+      btnsHtml+='<button class="bp" style="background:var(--gr);font-size:14px;padding:14px" onclick="astExecAddContact()">👤 Dodaj kontakt teraz</button>';
+      break;
+      
+    case 'add_reminder':
+      window._astData=json;
+      const tc=json.reminder.contact_id?contacts.find(x=>x.id===json.reminder.contact_id):null;
+      btnsHtml+='<button class="bp" style="background:var(--bl);font-size:14px;padding:14px" onclick="astExecAddReminder()">🔔 Dodaj termin: '+(tc?tc.name:'')+(json.reminder.time?' o '+json.reminder.time:'')+'</button>';
+      break;
+      
+    case 'change_status':
+      window._astData=json;
+      const sc=contacts.find(x=>x.id===json.status.contact_id);
+      if(sc) btnsHtml+='<button class="bp" style="background:var(--am);font-size:14px;padding:14px" onclick="astExecChangeStatus()">🔄 Zmień status: '+sc.name+' → '+SL[json.status.new_status]+'</button>';
+      else btnsHtml+='<div class="eb">Nie znaleziono kontaktu w CRM</div>';
+      break;
+      
+    case 'generate_offer':
+      window._astData=json;
+      btnsHtml+='<button class="bp" style="font-size:14px;padding:14px" onclick="astExecGenerateOffer()">📄 Otwórz generator oferty</button>';
+      break;
+      
+    case 'call':
+      const callC=json.call_id?contacts.find(x=>x.id===json.call_id):null;
+      if(callC&&callC.phone){
+        btnsHtml+='<a href="tel:+48'+callC.phone.replace(/\D/g,'')+'" class="bp" style="font-size:14px;padding:14px;text-decoration:none;justify-content:center" onclick="closeSheet('sh-assistant')">📞 Zadzwoń do '+callC.name+'</a>';
+      }else btnsHtml+='<div class="eb">Nie znaleziono numeru telefonu</div>';
+      break;
+      
+    case 'sms':
+      case 'whatsapp': {
+        const smsId=json.sms_id||json.whatsapp_id||json.call_id;
+        const smsC=smsId?contacts.find(x=>x.id===smsId):null;
+        if(smsC) btnsHtml+='<button class="bp" style="background:var(--bl);font-size:14px;padding:14px" onclick="closeSheet(\'sh-assistant\');openSMS('+smsC.id+')">💬 Wyślij SMS: '+smsC.name+'</button>';
+        else btnsHtml+='<div class="eb">Nie znaleziono kontaktu</div>';
+        break;
+      }
+      
+    case 'add_note':
+      window._astData=json;
+      btnsHtml+='<button class="bp" style="background:var(--or-d);font-size:14px;padding:14px" onclick="astExecAddNote()">📝 Zapisz notatkę</button>';
+      break;
+      
+    case 'show_screen':
+      btnsHtml+='<button class="bp" style="font-size:14px;padding:14px" onclick="closeSheet('sh-assistant');showScreen(''+json.screen+'')">➡ Przejdź do: '+json.screen+'</button>';
+      break;
+      
+    default:
+      btnsHtml+='<div class="eb">Nie rozpoznano komendy. Spróbuj inaczej.</div>';
+  }
+  
+  btnsHtml+='<button class="bs" onclick="openAssistant()">🎙 Nowa komenda</button>';
+  btnsHtml+='</div>';
+  acts.innerHTML=btnsHtml;
+}
+
+function astExecAddContact(){
+  const d=window._astData||{};const cd=d.contact||{};
+  const c={id:nextId++,name:cd.name||'Nowy klient',phone:cd.phone||'',email:'',city:cd.city||'',address:cd.address||'',product:cd.product||'piana PUR',status:'new',value:cd.value_pln||0,notes:cd.area_m2?'Pow: '+cd.area_m2+'m2'+(cd.thickness_cm?', gr: '+cd.thickness_cm+'cm':''):'',added:todayStr(),history:[{status:'new',date:todayStr()}],photos:[],notes_voice:[]};
+  contacts.push(c);
+  closeSheet('sh-assistant');
+  setTimeout(()=>openDetail(c.id),200);
+}
+
+function astExecAddReminder(){
+  const d=window._astData||{};const rem=d.reminder||{};
+  const date=rem.date||todayStr();
+  const time=rem.time||'';
+  const note=rem.note||RT[rem.type]||'Termin';
+  const noteDisplay=time?note+' (godz. '+time+')':note;
+  reminders.push({id:nextRid++,cid:rem.contact_id||null,type:rem.type||'meeting',date,time,note,noteDisplay,done:false});
+  closeSheet('sh-assistant');
+  const s=getCur();if(s==='home')renderHome();if(s==='reminders')renderReminders();if(s==='calendar')renderCalendar();
+}
+
+function astExecChangeStatus(){
+  const d=window._astData||{};const sc=d.status||{};
+  const c=contacts.find(x=>x.id===sc.contact_id);if(!c)return;
+  c.status=sc.new_status;if(!c.history)c.history=[];c.history.push({status:sc.new_status,date:todayStr()});
+  closeSheet('sh-assistant');
+  setTimeout(()=>openDetail(c.id),200);
+}
+
+function astExecGenerateOffer(){
+  const d=window._astData||{};const of=d.offer||{};
+  closeSheet('sh-assistant');
+  openSheet('sh-offer');
+  setTimeout(()=>{
+    if(of.contact_id){const c=contacts.find(x=>x.id===of.contact_id);if(c){document.getElementById('o-cid').value=c.id;fillFromC();}}
+    if(of.area_m2)document.getElementById('o-a1').value=of.area_m2;
+    if(of.thickness_cm)document.getElementById('o-t1').value=of.thickness_cm;
+    if(of.price_08)document.getElementById('o-p08').value=of.price_08;
+    if(of.price_09)document.getElementById('o-p09').value=of.price_09;
+  },200);
+}
+
+function astExecAddNote(){
+  const d=window._astData||{};const n=d.note||{};
+  if(n.contact_id){
+    const c=contacts.find(x=>x.id===n.contact_id);
+    if(c){if(!c.notes_voice)c.notes_voice=[];c.notes_voice.push({date:todayStr(),duration:'0:10',transcript:n.text||'',summary:n.text||''});}
+  }
+  closeSheet('sh-assistant');
+  if(n.contact_id)setTimeout(()=>openDetail(n.contact_id),200);
+}
+
+function showAstError(msg){
+  const btn=document.getElementById('ast-mic-btn');
+  btn.className='';btn.textContent='❌';btn.style.background='var(--re)';
+  document.getElementById('ast-status').textContent='Błąd';
+  document.getElementById('ast-result').style.display='block';
+  document.getElementById('ast-result').innerHTML='<div class="eb">'+msg+'</div>';
+  document.getElementById('ast-actions').style.display='block';
+  document.getElementById('ast-actions').innerHTML='<button class="bs" onclick="openAssistant()">🎙 Spróbuj ponownie</button>';
+}
+// koniec asystenta
+
 </script>
+
+<!-- ASYSTENT GŁOSOWY -->
+<div class="ovl" id="sh-assistant" onclick="ovc(event,'sh-assistant')">
+  <div class="sheet" style="padding-bottom:40px">
+    <div class="sh"></div>
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:4px">ASYSTENT GŁOSOWY BUDIVO</div>
+      <div style="font-size:12px;color:var(--light)">Powiedz co chcesz zrobić</div>
+    </div>
+
+    <!-- Duży przycisk mikrofonu -->
+    <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:20px">
+      <button id="ast-mic-btn" onclick="toggleAssistant()" style="width:90px;height:90px;border-radius:50%;background:var(--or);border:none;cursor:pointer;font-size:42px;display:flex;align-items:center;justify-content:center;transition:transform .1s">🎙</button>
+      <div id="ast-status" style="margin-top:12px;font-size:14px;font-weight:600;color:var(--muted)">Kliknij i mów</div>
+      <div id="ast-timer" style="font-size:12px;color:var(--light);margin-top:4px"></div>
+    </div>
+
+    <!-- Animacja fali -->
+    <div id="ast-wave" class="wave" style="margin-bottom:12px"></div>
+
+    <!-- Co powiedziano -->
+    <div id="ast-transcript" style="min-height:48px;background:var(--bg);border-radius:var(--rs);padding:12px;font-size:14px;color:var(--muted);margin-bottom:12px;line-height:1.5;text-align:center;font-style:italic">
+      Przykłady: "Dodaj klienta Jan Kowalski Rzeszów 500 100 200" · "Umów spotkanie z Kowalskim w piątek o 10" · "Kowalski zaakceptował ofertę"
+    </div>
+
+    <!-- Wynik AI -->
+    <div id="ast-result" style="display:none"></div>
+
+    <!-- Przyciski akcji -->
+    <div id="ast-actions" style="display:none"></div>
+
+    <button class="bs" style="margin-top:10px" onclick="stopAssistant();closeSheet('sh-assistant')">Zamknij</button>
+  </div>
+</div>
+
 </body>
 </html>
