@@ -623,8 +623,21 @@ async function generateOffer(){
     function drawRect(page,x,top,w,h,pad=2,color=WHITE){
       page.drawRectangle({x:x-pad,y:yy(top)-h-pad,width:w+pad*2,height:h+pad*2+1,color});
     }
+    function pl(text){
+      return String(text)
+        .replace(/ą/g,"a").replace(/Ą/g,"A")
+        .replace(/ć/g,"c").replace(/Ć/g,"C")
+        .replace(/ę/g,"e").replace(/Ę/g,"E")
+        .replace(/ł/g,"l").replace(/Ł/g,"L")
+        .replace(/ń/g,"n").replace(/Ń/g,"N")
+        .replace(/ó/g,"o").replace(/Ó/g,"O")
+        .replace(/ś/g,"s").replace(/Ś/g,"S")
+        .replace(/ź/g,"z").replace(/Ź/g,"Z")
+        .replace(/ż/g,"z").replace(/Ż/g,"Z")
+        .replace(/[^\x00-\x7F]/g,"?");
+    }
     function drawText(page,text,x,top,size,font,color=BLACK){
-      page.drawText(String(text),{x,y:yy(top),size,font,color});
+      page.drawText(pl(text),{x,y:yy(top),size,font,color});
     }
 
     setStatus('Wypełniam dane klienta...');
