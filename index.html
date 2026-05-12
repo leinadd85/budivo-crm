@@ -744,7 +744,7 @@ async function simulateTranscript(){
     console.log('AI fallback:',err.message);
     const m=Math.floor(recSecs/60);const s=recSecs%60;const dur=m+':'+(s<10?'0':'')+s;
     document.getElementById('ai-area').innerHTML='<div class="ai-box"><div class="ai-lbl">✨ Transkrypcja gotowa</div><div class="ai-txt">'+transcript.slice(0,120)+'...</div></div>';
-    document.getElementById('v-actions').innerHTML='<button class="bp" style="margin-top:10px" onclick="saveVoiceNote(''+transcript.replace(/'/g,"\'")+'',[no_sum],''+dur+'')">💾 Zapisz notatkę</button>'.replace('[no_sum]',"''");
+    document.getElementById('v-actions').innerHTML='<button class="bp" style="margin-top:10px" onclick="aiSaveNoteOnly()">💾 Zapisz notatkę</button>';
   }
 }
 
@@ -1042,8 +1042,7 @@ async function processVoiceCommand(){
       'Komenda uzytkownika: "'+cmd+'". '+
       'Kontakty w CRM: '+cList+'. '+
       'Dzisiaj: '+today+' ('+weekday+'). '+
-      'Zwroc TYLKO JSON bez markdown:
-'+
+      'Zwroc TYLKO JSON bez markdown: '+
       '{"action":"add_contact|add_reminder|change_status|generate_offer|call|whatsapp|add_note|show_screen|unknown",'+
       '"confidence":0-100,'+
       '"message":"co zostanie zrobione (po polsku, 1 zdanie)",'+
@@ -1113,7 +1112,7 @@ function executeVoiceCommand(json){
     case 'call':
       const callC=json.call_id?contacts.find(x=>x.id===json.call_id):null;
       if(callC&&callC.phone){
-        btnsHtml+='<a href="tel:+48'+callC.phone.replace(/\D/g,'')+'" class="bp" style="font-size:14px;padding:14px;text-decoration:none;justify-content:center" onclick="closeSheet('sh-assistant')">📞 Zadzwoń do '+callC.name+'</a>';
+        const telUrl='tel:+48'+callC.phone.replace(/\D/g,'');btnsHtml+='<a href="'+telUrl+'" class="bp" style="font-size:14px;padding:14px;text-decoration:none;justify-content:center" onclick="closeSheet(&quot;sh-assistant&quot;)">📞 Zadzwoń do '+callC.name+'</a>';
       }else btnsHtml+='<div class="eb">Nie znaleziono numeru telefonu</div>';
       break;
       
@@ -1132,7 +1131,7 @@ function executeVoiceCommand(json){
       break;
       
     case 'show_screen':
-      btnsHtml+='<button class="bp" style="font-size:14px;padding:14px" onclick="closeSheet('sh-assistant');showScreen(''+json.screen+'')">➡ Przejdź do: '+json.screen+'</button>';
+      btnsHtml+='<button class="bp" style="font-size:14px;padding:14px" onclick="goToScreen(\''+json.screen+'\')">' + '➡ Przejdź do: ' + json.screen + '</button>';
       break;
       
     default:
@@ -1194,6 +1193,7 @@ function astExecAddNote(){
   if(n.contact_id)setTimeout(()=>openDetail(n.contact_id),200);
 }
 
+function goToScreen(s){closeSheet('sh-assistant');showScreen(s);}
 function showAstError(msg){
   const btn=document.getElementById('ast-mic-btn');
   btn.className='';btn.textContent='❌';btn.style.background='var(--re)';
